@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -51,15 +52,15 @@ public class Task {
     @JsonIdentityReference
     private Set<Process> processes = new HashSet<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(fetch = LAZY, mappedBy = "task", cascade = REMOVE)
     @Column(name = "orders")
     private Set<TaskOrder> orders = new HashSet<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "from", cascade = CascadeType.ALL)
+    @OneToMany(fetch = LAZY, mappedBy = "from", cascade = REMOVE)
     @Column(name = "fromConnections")
     private Set<TaskConnection> fromConnections = new HashSet<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "to", cascade = CascadeType.ALL)
+    @OneToMany(fetch = LAZY, mappedBy = "to", cascade = REMOVE)
     @Column(name = "toConnections")
     private Set<TaskConnection> toConnections = new HashSet<>();
 

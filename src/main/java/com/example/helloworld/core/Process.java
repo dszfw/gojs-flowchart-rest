@@ -45,7 +45,7 @@ public class Process {
     @JsonIdentityReference
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "process", cascade = CascadeType.ALL)
+    @OneToMany(fetch = LAZY, mappedBy = "process", cascade = CascadeType.REMOVE)
     @Column(name = "orders")
     private Set<TaskOrder> orders = new HashSet<>();
 
