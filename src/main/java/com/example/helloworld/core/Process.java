@@ -45,6 +45,10 @@ public class Process {
     @JsonIdentityReference
     private Set<Task> tasks = new HashSet<>();
 
+    @OneToMany(fetch = LAZY, mappedBy = "process", cascade = CascadeType.ALL)
+    @Column(name = "orders")
+    private Set<TaskOrder> orders = new HashSet<>();
+
     public Process() {
     }
 
@@ -74,6 +78,14 @@ public class Process {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Set<TaskOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<TaskOrder> orders) {
+        this.orders = orders;
     }
 
     @Override

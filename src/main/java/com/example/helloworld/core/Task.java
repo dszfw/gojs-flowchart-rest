@@ -55,11 +55,35 @@ public class Task {
     @Column(name = "orders")
     private Set<TaskOrder> orders = new HashSet<>();
 
+    @OneToMany(fetch = LAZY, mappedBy = "from", cascade = CascadeType.ALL)
+    @Column(name = "fromConnections")
+    private Set<TaskConnection> fromConnections = new HashSet<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "to", cascade = CascadeType.ALL)
+    @Column(name = "toConnections")
+    private Set<TaskConnection> toConnections = new HashSet<>();
+
     public Task() {
     }
 
     public Task(String name) {
         this.name = name;
+    }
+
+    public Set<TaskConnection> getFromConnections() {
+        return fromConnections;
+    }
+
+    public void setFromConnections(Set<TaskConnection> fromConnections) {
+        this.fromConnections = fromConnections;
+    }
+
+    public Set<TaskConnection> getToConnections() {
+        return toConnections;
+    }
+
+    public void setToConnections(Set<TaskConnection> toConnections) {
+        this.toConnections = toConnections;
     }
 
     public Set<TaskOrder> getOrders() {

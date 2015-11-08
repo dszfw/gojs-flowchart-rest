@@ -2,13 +2,11 @@ package com.example.helloworld;
 
 import com.example.helloworld.auth.ExampleAuthorizer;
 import com.example.helloworld.core.*;
-import com.example.helloworld.db.ProcessDAO;
-import com.example.helloworld.db.TaskDAO;
+import com.example.helloworld.db.*;
 import com.example.helloworld.resources.*;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import com.example.helloworld.auth.ExampleAuthenticator;
 import com.example.helloworld.cli.RenderCommand;
-import com.example.helloworld.db.PersonDAO;
 import com.example.helloworld.core.Process;
 import com.example.helloworld.filter.DateRequiredFeature;
 import com.example.helloworld.health.TemplateHealthCheck;
@@ -34,7 +32,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     }
 
     private final HibernateBundle<HelloWorldConfiguration> hibernateBundle =
-            new HibernateBundle<HelloWorldConfiguration>(Person.class, Process.class, Task.class, TaskOrder.class) {
+            new HibernateBundle<HelloWorldConfiguration>(Person.class, Process.class, Task.class,
+                    TaskOrder.class, TaskConnection.class) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(HelloWorldConfiguration configuration) {
                     return configuration.getDataSourceFactory();
@@ -78,6 +77,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         final PersonDAO personDAO = new PersonDAO(hibernateBundle.getSessionFactory());
         final ProcessDAO processDAO = new ProcessDAO(hibernateBundle.getSessionFactory());
         final TaskDAO taskDAO = new TaskDAO(hibernateBundle.getSessionFactory());
+        final TaskOrderDAO taskOrderDAO = new TaskOrderDAO(hibernateBundle.getSessionFactory());
+        final TaskConnectionDAO taskConnectionDAO = new TaskConnectionDAO(hibernateBundle.getSessionFactory());
         final Template template = configuration.buildTemplate();
 
         env.healthChecks().register("template", new TemplateHealthCheck(template));
@@ -96,6 +97,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         env.jersey().register(new PersonResource(personDAO));
         env.jersey().register(new ProcessResource(processDAO));
         env.jersey().register(new TaskResource(taskDAO));
+        env.jersey().register(new TaskOrderResource(taskOrderDAO));
+        env.jersey().register(new TaskConnectionResource(taskConnectionDAO));
         env.jersey().register(new FilteredResource());
     }
 }

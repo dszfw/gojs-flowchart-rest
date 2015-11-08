@@ -12,11 +12,15 @@ public class TaskOrder {
     private long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "taskId")
+    @JoinColumn(name = "taskId", nullable = false)
     private Task task;
 
-    @Column(name = "taskOrder")
-    private long taskOrder;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "processId", nullable = false)
+    private Process process;
+
+    @Column(name = "position", nullable = false)
+    private long position;
 
     public TaskOrder() {
     }
@@ -29,6 +33,14 @@ public class TaskOrder {
         this.id = id;
     }
 
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
     public Task getTask() {
         return task;
     }
@@ -37,12 +49,12 @@ public class TaskOrder {
         this.task = task;
     }
 
-    public long getTaskOrder() {
-        return taskOrder;
+    public long getPosition() {
+        return position;
     }
 
-    public void setTaskOrder(long taskOrder) {
-        this.taskOrder = taskOrder;
+    public void setPosition(long position) {
+        this.position = position;
     }
 
     @Override
@@ -53,14 +65,14 @@ public class TaskOrder {
         TaskOrder taskOrder = (TaskOrder) o;
 
         if (getId() != taskOrder.getId()) return false;
-        return getTaskOrder() == taskOrder.getTaskOrder();
+        return getPosition() == taskOrder.getPosition();
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (int) (getTaskOrder() ^ (getTaskOrder() >>> 32));
+        result = 31 * result + (int) (getPosition() ^ (getPosition() >>> 32));
         return result;
     }
 }
