@@ -1,30 +1,19 @@
 package com.example.helloworld.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-import static javax.persistence.FetchType.LAZY;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "processes")
 @NamedQueries({
         @NamedQuery(
-                name = "com.example.helloworld.core.Process.findByIdJoinTasks",
-                query = "SELECT DISTINCT p FROM Process p LEFT JOIN FETCH p.tasks WHERE p.id = :id"
-        ),
-        @NamedQuery(
                 name = "com.example.helloworld.core.Process.findAll",
                 query = "SELECT p FROM Process p"
-        ),
-        @NamedQuery(
-                name = "com.example.helloworld.core.Process.findAllJoinTasks",
-                query = "SELECT DISTINCT p FROM Process p LEFT JOIN FETCH p.tasks"
         )
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -38,16 +27,8 @@ public class Process {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(name = "process_task",
-            joinColumns = @JoinColumn(name = "processId"),
-            inverseJoinColumns = @JoinColumn(name = "taskId"))
-    @JsonIdentityReference
-    private Set<Task> tasks = new HashSet<>();
-
-    @OneToMany(fetch = LAZY, mappedBy = "process", cascade = CascadeType.REMOVE)
-    @Column(name = "orders")
-    private Set<TaskOrder> orders = new HashSet<>();
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
+    private List<ProcessTask> taskAssoc = new ArrayList<>();
 
     public Process() {
     }
@@ -72,38 +53,12 @@ public class Process {
         this.name = name;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
+    public List<ProcessTask> getTaskAssoc() {
+        return taskAssoc;
     }
 
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
+    public void setTaskAssoc(List<ProcessTask> taskAssoc) {
+        this.taskAssoc = taskAssoc;
     }
 
-    public Set<TaskOrder> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<TaskOrder> orders) {
-        this.orders = orders;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Process)) return false;
-
-        Process process = (Process) o;
-
-        if (getId() != process.getId()) return false;
-        return !(getName() != null ? !getName().equals(process.getName()) : process.getName() != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        return result;
-    }
 }

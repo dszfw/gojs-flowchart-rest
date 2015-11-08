@@ -50,6 +50,9 @@
             <column name="taskId" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="position" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="process_task"
@@ -62,33 +65,6 @@
                                  baseColumnNames="taskId"
                                  constraintName="fk_process_task_2"
                                  referencedTableName="tasks"
-                                 referencedColumnNames="id"/>
-
-        <createTable tableName="task_order">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="taskId" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="processId" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="position" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addForeignKeyConstraint baseTableName="task_order"
-                                 baseColumnNames="taskId"
-                                 constraintName="fk_task_order_task"
-                                 referencedTableName="tasks"
-                                 referencedColumnNames="id"/>
-
-        <addForeignKeyConstraint baseTableName="task_order"
-                                 baseColumnNames="processId"
-                                 constraintName="fk_task_order_process"
-                                 referencedTableName="processes"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="task_connections">

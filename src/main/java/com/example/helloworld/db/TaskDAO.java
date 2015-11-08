@@ -13,19 +13,18 @@ public class TaskDAO extends AbstractDAO<Task> {
     }
 
     public Optional<Task> findById(Long id) {
-        return Optional.fromNullable(
-                uniqueResult(namedQuery("com.example.helloworld.core.Task.findByIdJoinProcesses")
-                        .setParameter("id", id)));
+        return Optional.fromNullable(get(id));
     }
 
     public List<Task> findAll() {
-        return list(namedQuery("com.example.helloworld.core.Task.findAllJoinProcesses"));
+        return list(namedQuery("com.example.helloworld.core.Task.findAll"));
     }
 
     public Task create(Task task) {
-        for (TaskOrder order : task.getOrders()) {
-            order.setTask(task);
-        }
+        return persist(task);
+    }
+
+    public Task update(Task task) {
         return persist(task);
     }
 

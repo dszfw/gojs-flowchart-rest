@@ -33,7 +33,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
 
     private final HibernateBundle<HelloWorldConfiguration> hibernateBundle =
             new HibernateBundle<HelloWorldConfiguration>(Person.class, Process.class, Task.class,
-                    TaskOrder.class, TaskConnection.class) {
+                    TaskConnection.class, ProcessTask.class) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(HelloWorldConfiguration configuration) {
                     return configuration.getDataSourceFactory();
@@ -75,9 +75,9 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     @Override
     public void run(HelloWorldConfiguration configuration, Environment env) {
         final PersonDAO personDAO = new PersonDAO(hibernateBundle.getSessionFactory());
-        final ProcessDAO processDAO = new ProcessDAO(hibernateBundle.getSessionFactory());
         final TaskDAO taskDAO = new TaskDAO(hibernateBundle.getSessionFactory());
-        final TaskOrderDAO taskOrderDAO = new TaskOrderDAO(hibernateBundle.getSessionFactory());
+        final ProcessDAO processDAO = new ProcessDAO(hibernateBundle.getSessionFactory());
+        processDAO.setTaskDAO(taskDAO);
         final TaskConnectionDAO taskConnectionDAO = new TaskConnectionDAO(hibernateBundle.getSessionFactory());
         final Template template = configuration.buildTemplate();
 
@@ -95,9 +95,8 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         env.jersey().register(new ProtectedResource());
         env.jersey().register(new PeopleResource(personDAO));
         env.jersey().register(new PersonResource(personDAO));
-        env.jersey().register(new ProcessResource(processDAO));
+        env.jersey().register(new ProcessResource(processDAO, taskDAO));
         env.jersey().register(new TaskResource(taskDAO));
-        env.jersey().register(new TaskOrderResource(taskOrderDAO));
         env.jersey().register(new TaskConnectionResource(taskConnectionDAO));
         env.jersey().register(new FilteredResource());
     }

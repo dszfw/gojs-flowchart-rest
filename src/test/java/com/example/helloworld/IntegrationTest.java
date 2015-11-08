@@ -108,8 +108,8 @@ public class IntegrationTest {
                 .readEntity(Process.class);
         assertThat(newProcess.getId()).isNotNull();
         assertThat(newProcess.getName()).isEqualTo(process.getName());
-        assertThat(newProcess.getTasks()).isNotNull();
-        assertThat(newProcess.getTasks().size()).isEqualTo(tasksCount);
+        assertThat(newProcess.getTaskAssoc()).isNotEmpty();
+        assertThat(newProcess.getTaskAssoc().size()).isEqualTo(tasksCount);
     }
 
     private void createTasksForProcess(Process process, int count) {
@@ -121,9 +121,10 @@ public class IntegrationTest {
                     .post(Entity.entity(task, APPLICATION_JSON_TYPE))
                     .readEntity(Task.class);
 
-            Task t = new Task();
-            t.setId(responseTask.getId());
-            process.getTasks().add(t);
+            ProcessTask assoc = new ProcessTask();
+            assoc.setTask(responseTask);
+            assoc.setProcess(process);
+            process.getTaskAssoc().add(assoc);
         }
     }
 }

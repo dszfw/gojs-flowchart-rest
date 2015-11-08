@@ -1,14 +1,16 @@
 package com.example.helloworld.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.LAZY;
 
@@ -16,16 +18,8 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "tasks")
 @NamedQueries({
         @NamedQuery(
-                name = "com.example.helloworld.core.Task.findByIdJoinProcesses",
-                query = "SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.processes where t.id = :id"
-        ),
-        @NamedQuery(
                 name = "com.example.helloworld.core.Task.findAll",
                 query = "SELECT t FROM Task t"
-        ),
-        @NamedQuery(
-                name = "com.example.helloworld.core.Task.findAllJoinProcesses",
-                query = "SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.processes"
         )
 })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -45,16 +39,8 @@ public class Task {
     @Column(name = "loc", nullable = true)
     private String loc;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(name = "process_task",
-            joinColumns = @JoinColumn(name = "taskId"),
-            inverseJoinColumns = @JoinColumn(name = "processId"))
-    @JsonIdentityReference
-    private Set<Process> processes = new HashSet<>();
-
-    @OneToMany(fetch = LAZY, mappedBy = "task", cascade = REMOVE)
-    @Column(name = "orders")
-    private Set<TaskOrder> orders = new HashSet<>();
+    @OneToMany(mappedBy = "task", cascade = ALL)
+    private List<ProcessTask> processAssoc = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, mappedBy = "from", cascade = REMOVE)
     @Column(name = "fromConnections")
@@ -85,14 +71,6 @@ public class Task {
 
     public void setToConnections(Set<TaskConnection> toConnections) {
         this.toConnections = toConnections;
-    }
-
-    public Set<TaskOrder> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<TaskOrder> orders) {
-        this.orders = orders;
     }
 
     public long getId() {
@@ -127,35 +105,12 @@ public class Task {
         this.loc = loc;
     }
 
-    public Set<Process> getProcesses() {
-        return processes;
+    public List<ProcessTask> getProcessAssoc() {
+        return processAssoc;
     }
 
-    public void setProcesses(Set<Process> processes) {
-        this.processes = processes;
+    public void setProcessAssoc(List<ProcessTask> processAssoc) {
+        this.processAssoc = processAssoc;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Task)) return false;
-
-        Task task = (Task) o;
-
-        if (getId() != task.getId()) return false;
-        if (getName() != null ? !getName().equals(task.getName()) : task.getName() != null) return false;
-        if (getCategory() != null ? !getCategory().equals(task.getCategory()) : task.getCategory() != null)
-            return false;
-        return !(getLoc() != null ? !getLoc().equals(task.getLoc()) : task.getLoc() != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getCategory() != null ? getCategory().hashCode() : 0);
-        result = 31 * result + (getLoc() != null ? getLoc().hashCode() : 0);
-        return result;
-    }
 }

@@ -1,8 +1,10 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.core.ProcessTask;
 import com.example.helloworld.core.Task;
 import com.example.helloworld.db.ProcessDAO;
 import com.example.helloworld.core.Process;
+import com.example.helloworld.db.TaskDAO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
@@ -21,9 +23,11 @@ import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 public class ProcessResource {
 
     private final ProcessDAO processDAO;
+    private final TaskDAO taskDAO;
 
-    public ProcessResource(ProcessDAO processDAO) {
+    public ProcessResource(ProcessDAO processDAO, TaskDAO taskDAO) {
         this.processDAO = processDAO;
+        this.taskDAO = taskDAO;
     }
 
     @GET
@@ -66,15 +70,15 @@ public class ProcessResource {
     @UnitOfWork
     public Process test() {
         final Process process = new Process("Process with tasks");
+        final Task task = taskDAO.create(new Task("task with process"));
 
-        for (int i = 0; i < 10; i++) {
-            Task task = new Task("Task " + i);
-            task.getProcesses().add(process);
-            process.getTasks().add(task);
-        }
+        ProcessTask assoc = new ProcessTask();
+        assoc.setProcess(process);
+        assoc.setTask(task);
+        assoc.setPosition(222);
 
+        process.getTaskAssoc().add(assoc);
         processDAO.create(process);
-
         return process;
     }
 
