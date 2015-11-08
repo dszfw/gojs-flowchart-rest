@@ -29,4 +29,8 @@ public class ProcessDAO extends AbstractDAO<Process> {
         }
         return persist(process);
     }
+
+    public void delete(Process process) {
+        currentSession().delete(process);
+    }
 }

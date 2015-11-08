@@ -35,6 +35,12 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
+            <column name="category" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="loc" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
 
         <createTable tableName="process_task">

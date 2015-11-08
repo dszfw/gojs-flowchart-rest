@@ -115,8 +115,15 @@ public class IntegrationTest {
     private void createTasksForProcess(Process process, int count) {
         for (int i = 0; i < count; i++) {
             Task task = new Task("Task " + i);
-            task.getProcesses().add(process);
-            process.getTasks().add(task);
+
+            final Task responseTask = client.target("http://localhost:" + RULE.getLocalPort() + "/tasks")
+                    .request()
+                    .post(Entity.entity(task, APPLICATION_JSON_TYPE))
+                    .readEntity(Task.class);
+
+            Task t = new Task();
+            t.setId(responseTask.getId());
+            process.getTasks().add(t);
         }
     }
 }

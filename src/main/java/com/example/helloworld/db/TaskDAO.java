@@ -18,11 +18,15 @@ public class TaskDAO extends AbstractDAO<Task> {
                         .setParameter("id", id)));
     }
 
+    public List<Task> findAll() {
+        return list(namedQuery("com.example.helloworld.core.Task.findAllJoinProcesses"));
+    }
+
     public Task create(Task task) {
         return persist(task);
     }
 
-    public List<Task> findAll() {
-        return list(namedQuery("com.example.helloworld.core.Task.findAllJoinProcesses"));
+    public void delete(Task task) {
+        currentSession().delete(task);
     }
 }

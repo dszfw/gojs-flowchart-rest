@@ -9,7 +9,12 @@ import io.dropwizard.jersey.params.LongParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 
 @Path("/processes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,6 +43,21 @@ public class ProcessResource {
     @UnitOfWork
     public List<Process> listProcesses() {
         return processDAO.findAll();
+    }
+
+    @DELETE
+    @Path("{processId}")
+    @UnitOfWork
+    public Response deleteProcess(@PathParam("processId") LongParam processId) {
+        try {
+            Process process = findSafely(processId.get());
+            processDAO.delete(process);
+            return Response.status(NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            return Response.status(NOT_FOUND).build();
+        } catch (Exception e) {
+            return Response.status(INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // TODO should be removed

@@ -8,7 +8,12 @@ import io.dropwizard.jersey.params.LongParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 
 @Path("/tasks")
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,6 +42,21 @@ public class TaskResource {
     @UnitOfWork
     public Task createTask(Task task) {
         return taskDAO.create(task);
+    }
+
+    @DELETE
+    @Path("{taskId}")
+    @UnitOfWork
+    public Response deleteTask(@PathParam("taskId") LongParam taskId) {
+        try {
+            Task task = findSafely(taskId.get());
+            taskDAO.delete(task);
+            return Response.status(NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            return Response.status(NOT_FOUND).build();
+        } catch (Exception e) {
+            return Response.status(INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     private Task findSafely(long taskId) {

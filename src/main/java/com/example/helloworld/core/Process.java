@@ -36,7 +36,10 @@ public class Process {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "processes")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "process_task",
+            joinColumns = @JoinColumn(name = "processId"),
+            inverseJoinColumns = @JoinColumn(name = "taskId"))
     @JsonIdentityReference
     private Set<Task> tasks = new HashSet<>();
 
