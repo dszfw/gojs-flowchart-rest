@@ -1,7 +1,6 @@
 package com.example.helloworld.db;
 
 import com.example.helloworld.core.Process;
-import com.example.helloworld.core.Task;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
@@ -24,9 +23,6 @@ public class ProcessDAO extends AbstractDAO<Process> {
     }
 
     public Process create(Process process) {
-        for (Task task : process.getTasks()) {
-            task.getProcesses().add(process);
-        }
         return persist(process);
     }
 

@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "processes")
 @NamedQueries({
@@ -36,7 +38,7 @@ public class Process {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = LAZY)
     @JoinTable(name = "process_task",
             joinColumns = @JoinColumn(name = "processId"),
             inverseJoinColumns = @JoinColumn(name = "taskId"))

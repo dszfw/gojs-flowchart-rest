@@ -23,6 +23,9 @@ public class TaskDAO extends AbstractDAO<Task> {
     }
 
     public Task create(Task task) {
+        for (TaskOrder order : task.getOrders()) {
+            order.setTask(task);
+        }
         return persist(task);
     }
 

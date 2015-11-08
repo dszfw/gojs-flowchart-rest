@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "tasks")
 @NamedQueries({
@@ -42,18 +44,30 @@ public class Task {
     @Column(name = "loc", nullable = true)
     private String loc;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = LAZY)
     @JoinTable(name = "process_task",
             joinColumns = @JoinColumn(name = "taskId"),
             inverseJoinColumns = @JoinColumn(name = "processId"))
     @JsonIdentityReference
     private Set<Process> processes = new HashSet<>();
 
+    @OneToMany(fetch = LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    @Column(name = "orders")
+    private Set<TaskOrder> orders = new HashSet<>();
+
     public Task() {
     }
 
     public Task(String name) {
         this.name = name;
+    }
+
+    public Set<TaskOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<TaskOrder> orders) {
+        this.orders = orders;
     }
 
     public long getId() {
