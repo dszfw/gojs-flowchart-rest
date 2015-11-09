@@ -1,13 +1,11 @@
-package com.example.helloworld.resources;
+package custom.resources;
 
-import com.example.helloworld.core.*;
-import com.example.helloworld.core.Process;
-import com.example.helloworld.db.TaskDAO;
-import com.example.helloworld.dto.process.ProcessDTO;
-import com.example.helloworld.dto.task.TaskDTO;
+import custom.dao.TaskDAO;
+import custom.dto.task.TaskDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
+import custom.domain.Task;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -1,10 +1,10 @@
-package com.example.helloworld.dto.process;
+package custom.dto.process;
 
-import com.example.helloworld.core.Process;
-import com.example.helloworld.core.ProcessTask;
-import com.example.helloworld.core.TaskConnection;
-import com.example.helloworld.dto.TaskConnectionDTO;
-import com.example.helloworld.dto.task.TaskDTOinProcessDTO;
+import custom.domain.Process;
+import custom.domain.ProcessTask;
+import custom.domain.TaskConnection;
+import custom.dto.TaskConnectionDTO;
+import custom.dto.task.TaskDTOinProcessDTO;
 
 import java.util.HashSet;
 import java.util.Set;

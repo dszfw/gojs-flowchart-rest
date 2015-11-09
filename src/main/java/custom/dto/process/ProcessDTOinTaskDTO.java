@@ -1,6 +1,6 @@
-package com.example.helloworld.dto.process;
+package custom.dto.process;
 
-import com.example.helloworld.core.Process;
+import custom.domain.Process;
 
 public class ProcessDTOinTaskDTO {
     private long id;

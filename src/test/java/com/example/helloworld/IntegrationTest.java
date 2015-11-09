@@ -2,7 +2,6 @@ package com.example.helloworld;
 
 import com.example.helloworld.core.*;
 import com.example.helloworld.api.Saying;
-import com.example.helloworld.core.Process;
 import com.google.common.base.Optional;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
@@ -75,56 +74,4 @@ public class IntegrationTest {
         assertThat(newPerson.getJobTitle()).isEqualTo(person.getJobTitle());
     }
 
-    @Test
-    public void postProcess() throws Exception {
-        final Process process = new Process("First process");
-        final Process newProcess = client.target("http://localhost:" + RULE.getLocalPort() + "/processes")
-                .request()
-                .post(Entity.entity(process, APPLICATION_JSON_TYPE))
-                .readEntity(Process.class);
-        assertThat(newProcess.getId()).isNotNull();
-        assertThat(newProcess.getName()).isEqualTo(process.getName());
-    }
-
-    @Test
-    public void postTask() throws Exception {
-        final Task task = new Task("First task");
-        final Task newTask = client.target("http://localhost:" + RULE.getLocalPort() + "/tasks")
-                .request()
-                .post(Entity.entity(task, APPLICATION_JSON_TYPE))
-                .readEntity(Task.class);
-        assertThat(newTask.getId()).isNotNull();
-        assertThat(newTask.getName()).isEqualTo(task.getName());
-    }
-
-    @Test
-    public void postProcessWithTasks() throws Exception {
-        final Process process = new Process("Process with tasks");
-        int tasksCount = 10;
-        createTasksForProcess(process, tasksCount);
-        final Process newProcess = client.target("http://localhost:" + RULE.getLocalPort() + "/processes")
-                .request()
-                .post(Entity.entity(process, APPLICATION_JSON_TYPE))
-                .readEntity(Process.class);
-        assertThat(newProcess.getId()).isNotNull();
-        assertThat(newProcess.getName()).isEqualTo(process.getName());
-        assertThat(newProcess.getTaskAssoc()).isNotEmpty();
-        assertThat(newProcess.getTaskAssoc().size()).isEqualTo(tasksCount);
-    }
-
-    private void createTasksForProcess(Process process, int count) {
-        for (int i = 0; i < count; i++) {
-            Task task = new Task("Task " + i);
-
-            final Task responseTask = client.target("http://localhost:" + RULE.getLocalPort() + "/tasks")
-                    .request()
-                    .post(Entity.entity(task, APPLICATION_JSON_TYPE))
-                    .readEntity(Task.class);
-
-            ProcessTask assoc = new ProcessTask();
-            assoc.setTask(responseTask);
-            assoc.setProcess(process);
-            process.getTaskAssoc().add(assoc);
-        }
-    }
 }

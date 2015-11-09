@@ -1,6 +1,6 @@
-package com.example.helloworld.db;
+package custom.dao;
 
-import com.example.helloworld.core.TaskConnection;
+import custom.domain.TaskConnection;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
@@ -29,6 +29,6 @@ public class TaskConnectionDAO extends AbstractDAO<TaskConnection> {
     }
 
     public List<TaskConnection> findAll() {
-        return list(namedQuery("com.example.helloworld.core.TaskConnection.findAll"));
+        return list(namedQuery("custom.domain.TaskConnection.findAll"));
     }
 }

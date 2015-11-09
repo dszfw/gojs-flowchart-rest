@@ -1,4 +1,4 @@
-package com.example.helloworld.core;
+package custom.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "tasks")
 @NamedQueries({
         @NamedQuery(
-                name = "com.example.helloworld.core.Task.findAll",
+                name = "custom.domain.Task.findAll",
                 query = "SELECT t FROM Task t"
         )
 })

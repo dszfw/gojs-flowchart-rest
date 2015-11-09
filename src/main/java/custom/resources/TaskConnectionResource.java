@@ -1,10 +1,8 @@
-package com.example.helloworld.resources;
+package custom.resources;
 
-import com.example.helloworld.core.Task;
-import com.example.helloworld.core.TaskConnection;
-import com.example.helloworld.db.TaskConnectionDAO;
-import com.example.helloworld.dto.TaskConnectionDTO;
-import com.example.helloworld.dto.task.TaskDTO;
+import custom.domain.TaskConnection;
+import custom.dao.TaskConnectionDAO;
+import custom.dto.TaskConnectionDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;

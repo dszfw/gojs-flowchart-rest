@@ -1,8 +1,9 @@
-package com.example.helloworld.db;
+package custom.dao;
 
-import com.example.helloworld.core.*;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
+import custom.domain.ProcessTask;
+import custom.domain.Task;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class TaskDAO extends AbstractDAO<Task> {
     }
 
     public List<Task> findAll() {
-        return list(namedQuery("com.example.helloworld.core.Task.findAll"));
+        return list(namedQuery("custom.domain.Task.findAll"));
     }
 
     public Task create(Task task) {

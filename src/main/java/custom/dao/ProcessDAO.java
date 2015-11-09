@@ -1,7 +1,7 @@
-package com.example.helloworld.db;
+package custom.dao;
 
-import com.example.helloworld.core.Process;
-import com.example.helloworld.core.ProcessTask;
+import custom.domain.Process;
+import custom.domain.ProcessTask;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
@@ -25,7 +25,7 @@ public class ProcessDAO extends AbstractDAO<Process> {
     }
 
     public List<Process> findAll() {
-        return list(namedQuery("com.example.helloworld.core.Process.findAll"));
+        return list(namedQuery("custom.domain.Process.findAll"));
     }
 
     public Process create(Process process) {

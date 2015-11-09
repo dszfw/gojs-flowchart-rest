@@ -1,6 +1,6 @@
-package com.example.helloworld.dto;
+package custom.dto;
 
-import com.example.helloworld.core.TaskConnection;
+import custom.domain.TaskConnection;
 
 public class TaskConnectionDTO {
     private long id;

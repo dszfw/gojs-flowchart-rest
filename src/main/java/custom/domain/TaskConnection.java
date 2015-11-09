@@ -1,4 +1,4 @@
-package com.example.helloworld.core;
+package custom.domain;
 
 import javax.persistence.*;
 
@@ -8,7 +8,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "task_connections")
 @NamedQueries({
         @NamedQuery(
-                name = "com.example.helloworld.core.TaskConnection.findAll",
+                name = "custom.domain.TaskConnection.findAll",
                 query = "SELECT tc FROM TaskConnection tc"
         )
 })

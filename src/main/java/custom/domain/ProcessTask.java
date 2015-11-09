@@ -1,4 +1,4 @@
-package com.example.helloworld.core;
+package custom.domain;
 
 import javax.persistence.*;
 
