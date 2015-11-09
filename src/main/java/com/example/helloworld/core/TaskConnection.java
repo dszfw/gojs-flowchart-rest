@@ -22,6 +22,10 @@ public class TaskConnection {
     @JoinColumn(name = "toId", nullable = false)
     private Task to;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "processId", nullable = false)
+    private Process process;
+
     @Column(name = "fromConnector", nullable = false)
     private String fromConnector;
 
@@ -77,6 +81,14 @@ public class TaskConnection {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
     }
 
     // TODO equals and hashcode

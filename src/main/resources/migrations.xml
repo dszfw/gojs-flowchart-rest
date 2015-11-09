@@ -86,6 +86,9 @@
             <column name="toId" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="processId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="task_connections"
@@ -98,6 +101,12 @@
                                  baseColumnNames="toId"
                                  constraintName="fk_task_connections_to"
                                  referencedTableName="tasks"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="task_connections"
+                                 baseColumnNames="processId"
+                                 constraintName="fk_task_connections_process"
+                                 referencedTableName="processes"
                                  referencedColumnNames="id"/>
 
     </changeSet>
