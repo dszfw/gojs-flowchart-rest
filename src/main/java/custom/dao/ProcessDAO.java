@@ -3,6 +3,8 @@ package custom.dao;
 import custom.domain.Process;
 import custom.domain.ProcessTask;
 import com.google.common.base.Optional;
+import custom.domain.Task;
+import custom.exception.DropwizardExampleException;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
@@ -45,8 +47,11 @@ public class ProcessDAO extends AbstractDAO<Process> {
     private void assocWithTask(Process process) {
         for (ProcessTask assoc : process.getTaskAssoc()) {
             long taskId = assoc.getTask().getId();
-            // TODO NPE
-            assoc.setTask(taskDAO.findById(taskId).get());
+            Optional<Task> taskOptional = taskDAO.findById(taskId);
+            if (!taskOptional.isPresent()) {
+                throw new DropwizardExampleException("Task with given Id doesn't exist");
+            }
+            assoc.setTask(taskOptional.get());
             assoc.setProcess(process);
         }
     }

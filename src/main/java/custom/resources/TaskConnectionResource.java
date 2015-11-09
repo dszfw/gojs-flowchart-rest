@@ -48,14 +48,14 @@ public class TaskConnectionResource {
 
     @POST
     @UnitOfWork
-    public TaskConnection create(TaskConnection connection) {
-        return dao.create(connection);
+    public TaskConnectionDTO create(TaskConnection connection) {
+        return new TaskConnectionDTO(dao.create(connection));
     }
 
     @PUT
     @UnitOfWork
-    public TaskConnection update(TaskConnection connection) {
-        return dao.update(connection);
+    public TaskConnectionDTO update(TaskConnection connection) {
+        return new TaskConnectionDTO(dao.update(connection));
     }
 
     @DELETE

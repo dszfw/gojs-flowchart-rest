@@ -41,8 +41,9 @@ public class ProcessResource {
 
     @POST
     @UnitOfWork
-    public Process createProcess(Process process) {
-        return processDAO.create(process);
+    public ProcessDTO createProcess(Process process) {
+        Process p = processDAO.create(process);
+        return new ProcessDTO(p);
     }
 
     @GET
@@ -58,8 +59,9 @@ public class ProcessResource {
 
     @PUT
     @UnitOfWork
-    public Process update(Process process) {
-        return processDAO.update(process);
+    public ProcessDTO update(Process process) {
+        Process p = processDAO.update(process);
+        return new ProcessDTO(p);
     }
 
     @DELETE

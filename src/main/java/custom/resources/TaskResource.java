@@ -47,14 +47,16 @@ public class TaskResource {
 
     @POST
     @UnitOfWork
-    public Task createTask(Task task) {
-        return taskDAO.create(task);
+    public TaskDTO createTask(Task task) {
+        Task t = taskDAO.create(task);
+        return new TaskDTO(t);
     }
 
     @PUT
     @UnitOfWork
-    public Task update(Task task) {
-        return taskDAO.update(task);
+    public TaskDTO update(Task task) {
+        Task t = taskDAO.update(task);
+        return new TaskDTO(t);
     }
 
     @DELETE
