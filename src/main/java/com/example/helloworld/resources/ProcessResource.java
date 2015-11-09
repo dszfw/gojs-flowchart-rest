@@ -49,6 +49,12 @@ public class ProcessResource {
         return processDAO.findAll();
     }
 
+    @PUT
+    @UnitOfWork
+    public Process update(Process process) {
+        return processDAO.update(process);
+    }
+
     @DELETE
     @Path("{processId}")
     @UnitOfWork

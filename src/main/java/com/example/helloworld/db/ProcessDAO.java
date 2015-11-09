@@ -29,15 +29,25 @@ public class ProcessDAO extends AbstractDAO<Process> {
     }
 
     public Process create(Process process) {
-        for (ProcessTask assoc : process.getTaskAssoc()) {
-            long taskId = assoc.getTask().getId();
-            assoc.setTask(taskDAO.findById(taskId).get());
-            assoc.setProcess(process);
-        }
+        assocWithTask(process);
+        return persist(process);
+    }
+
+    public Process update(Process process) {
+        assocWithTask(process);
         return persist(process);
     }
 
     public void delete(Process process) {
         currentSession().delete(process);
+    }
+
+    private void assocWithTask(Process process) {
+        for (ProcessTask assoc : process.getTaskAssoc()) {
+            long taskId = assoc.getTask().getId();
+            // TODO NPE
+            assoc.setTask(taskDAO.findById(taskId).get());
+            assoc.setProcess(process);
+        }
     }
 }

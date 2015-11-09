@@ -44,6 +44,12 @@ public class TaskResource {
         return taskDAO.create(task);
     }
 
+    @PUT
+    @UnitOfWork
+    public Task update(Task task) {
+        return taskDAO.update(task);
+    }
+
     @DELETE
     @Path("{taskId}")
     @UnitOfWork

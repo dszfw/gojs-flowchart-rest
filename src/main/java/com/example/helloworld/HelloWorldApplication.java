@@ -78,6 +78,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         final TaskDAO taskDAO = new TaskDAO(hibernateBundle.getSessionFactory());
         final ProcessDAO processDAO = new ProcessDAO(hibernateBundle.getSessionFactory());
         processDAO.setTaskDAO(taskDAO);
+        taskDAO.setProcessDAO(processDAO);
         final TaskConnectionDAO taskConnectionDAO = new TaskConnectionDAO(hibernateBundle.getSessionFactory());
         final Template template = configuration.buildTemplate();
 
