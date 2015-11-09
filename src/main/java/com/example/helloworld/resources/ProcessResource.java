@@ -5,6 +5,7 @@ import com.example.helloworld.core.Task;
 import com.example.helloworld.db.ProcessDAO;
 import com.example.helloworld.core.Process;
 import com.example.helloworld.db.TaskDAO;
+import com.example.helloworld.dto.ProcessDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
@@ -12,6 +13,7 @@ import io.dropwizard.jersey.params.LongParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -33,8 +35,8 @@ public class ProcessResource {
     @GET
     @Path("{processId}")
     @UnitOfWork
-    public Process getProcess(@PathParam("processId") LongParam processId) {
-        return findSafely(processId.get());
+    public ProcessDTO getProcess(@PathParam("processId") LongParam processId) {
+        return new ProcessDTO(findSafely(processId.get()));
     }
 
     @POST
@@ -45,8 +47,13 @@ public class ProcessResource {
 
     @GET
     @UnitOfWork
-    public List<Process> listProcesses() {
-        return processDAO.findAll();
+    public List<ProcessDTO> listProcesses() {
+        List<Process> processes = processDAO.findAll();
+        List<ProcessDTO> dtos = new ArrayList<>();
+        for (Process process : processes) {
+            dtos.add(new ProcessDTO(process));
+        }
+        return dtos;
     }
 
     @PUT
