@@ -1,6 +1,5 @@
 package com.example.helloworld.dto;
 
-import com.example.helloworld.core.Process;
 import com.example.helloworld.core.TaskConnection;
 
 public class TaskConnectionDTO {

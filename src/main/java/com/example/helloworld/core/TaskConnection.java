@@ -6,6 +6,12 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "task_connections")
+@NamedQueries({
+        @NamedQuery(
+                name = "com.example.helloworld.core.TaskConnection.findAll",
+                query = "SELECT tc FROM TaskConnection tc"
+        )
+})
 public class TaskConnection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

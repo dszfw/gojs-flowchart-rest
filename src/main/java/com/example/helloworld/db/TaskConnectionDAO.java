@@ -5,6 +5,8 @@ import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
+import java.util.List;
+
 public class TaskConnectionDAO extends AbstractDAO<TaskConnection> {
     public TaskConnectionDAO(SessionFactory factory) {
         super(factory);
@@ -24,5 +26,9 @@ public class TaskConnectionDAO extends AbstractDAO<TaskConnection> {
 
     public void delete(TaskConnection connection) {
         currentSession().delete(connection);
+    }
+
+    public List<TaskConnection> findAll() {
+        return list(namedQuery("com.example.helloworld.core.TaskConnection.findAll"));
     }
 }

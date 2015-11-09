@@ -5,7 +5,7 @@ import com.example.helloworld.core.Task;
 import com.example.helloworld.db.ProcessDAO;
 import com.example.helloworld.core.Process;
 import com.example.helloworld.db.TaskDAO;
-import com.example.helloworld.dto.ProcessDTO;
+import com.example.helloworld.dto.process.ProcessDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;

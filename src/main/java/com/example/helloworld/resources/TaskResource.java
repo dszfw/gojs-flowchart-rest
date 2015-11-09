@@ -1,7 +1,10 @@
 package com.example.helloworld.resources;
 
 import com.example.helloworld.core.*;
+import com.example.helloworld.core.Process;
 import com.example.helloworld.db.TaskDAO;
+import com.example.helloworld.dto.process.ProcessDTO;
+import com.example.helloworld.dto.task.TaskDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
@@ -9,6 +12,7 @@ import io.dropwizard.jersey.params.LongParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -28,14 +32,19 @@ public class TaskResource {
     @GET
     @Path("{taskId}")
     @UnitOfWork
-    public Task getTask(@PathParam("taskId") LongParam taskId) {
-        return findSafely(taskId.get());
+    public TaskDTO getTask(@PathParam("taskId") LongParam taskId) {
+        return new TaskDTO(findSafely(taskId.get()));
     }
 
     @GET
     @UnitOfWork
-    public List<Task> listTasks() {
-        return taskDAO.findAll();
+    public List<TaskDTO> listTasks() {
+        List<Task> tasks = taskDAO.findAll();
+        List<TaskDTO> dtos = new ArrayList<>();
+        for (Task task : tasks) {
+            dtos.add(new TaskDTO(task));
+        }
+        return dtos;
     }
 
     @POST

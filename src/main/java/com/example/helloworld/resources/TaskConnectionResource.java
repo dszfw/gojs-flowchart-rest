@@ -1,7 +1,10 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.core.Task;
 import com.example.helloworld.core.TaskConnection;
 import com.example.helloworld.db.TaskConnectionDAO;
+import com.example.helloworld.dto.TaskConnectionDTO;
+import com.example.helloworld.dto.task.TaskDTO;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
@@ -9,6 +12,9 @@ import io.dropwizard.jersey.params.LongParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
@@ -22,6 +28,24 @@ public class TaskConnectionResource {
 
     public TaskConnectionResource(TaskConnectionDAO taskConnectionDAO) {
         this.dao = taskConnectionDAO;
+    }
+
+    @GET
+    @Path("{connectionId}")
+    @UnitOfWork
+    public TaskConnectionDTO get(@PathParam("connectionId") LongParam id) {
+        return new TaskConnectionDTO(findSafely(id.get()));
+    }
+
+    @GET
+    @UnitOfWork
+    public List<TaskConnectionDTO> list() {
+        List<TaskConnection> connections = dao.findAll();
+        List<TaskConnectionDTO> dtos = new ArrayList<>();
+        for (TaskConnection connection : connections) {
+            dtos.add(new TaskConnectionDTO(connection));
+        }
+        return dtos;
     }
 
     @POST

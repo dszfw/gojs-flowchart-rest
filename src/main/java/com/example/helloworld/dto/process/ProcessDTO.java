@@ -1,8 +1,10 @@
-package com.example.helloworld.dto;
+package com.example.helloworld.dto.process;
 
 import com.example.helloworld.core.Process;
 import com.example.helloworld.core.ProcessTask;
 import com.example.helloworld.core.TaskConnection;
+import com.example.helloworld.dto.TaskConnectionDTO;
+import com.example.helloworld.dto.task.TaskDTOinProcessDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +12,7 @@ import java.util.Set;
 public class ProcessDTO {
     private long id;
     private String name;
-    private Set<TaskDTO> tasks = new HashSet<>();
+    private Set<TaskDTOinProcessDTO> tasks = new HashSet<>();
     private Set<TaskConnectionDTO> connections = new HashSet<>();
 
     public ProcessDTO() {
@@ -20,7 +22,7 @@ public class ProcessDTO {
         this.id = process.getId();
         this.name = process.getName();
         for (ProcessTask assoc : process.getTaskAssoc()) {
-            this.tasks.add(new TaskDTO(assoc.getTask()));
+            this.tasks.add(new TaskDTOinProcessDTO(assoc.getTask(), assoc.getPosition()));
         }
         for (TaskConnection connection : process.getConnections()) {
             this.connections.add(new TaskConnectionDTO(connection));
@@ -43,11 +45,11 @@ public class ProcessDTO {
         this.name = name;
     }
 
-    public Set<TaskDTO> getTasks() {
+    public Set<TaskDTOinProcessDTO> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<TaskDTO> tasks) {
+    public void setTasks(Set<TaskDTOinProcessDTO> tasks) {
         this.tasks = tasks;
     }
 
