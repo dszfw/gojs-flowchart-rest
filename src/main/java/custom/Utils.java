@@ -14,10 +14,18 @@ import java.util.List;
 
 public class Utils {
 
-    public static URI uriForCreated(BaseEntity entry, Class resourceClass) {
+    public static URI uriForIdentifiable(BaseEntity entry, Class resourceClass) {
+        return uriForIdentifiable(entry.getId(), resourceClass);
+    }
+
+    public static URI uriForIdentifiable(long id, Class resourceClass) {
         return UriBuilder.fromResource(resourceClass)
-                .path(Long.toString(entry.getId()))
+                .path(Long.toString(id))
                 .build();
+    }
+
+    public static URI uriForCollection(Class resourceClass) {
+        return UriBuilder.fromResource(resourceClass).build();
     }
 
     public static Response created(BaseEntity en, URI uri) {

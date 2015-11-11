@@ -3,9 +3,10 @@ package custom.domain;
 import custom.dto.BaseDTO;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @MappedSuperclass
-abstract public class BaseEntity {
+abstract public class BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

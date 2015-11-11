@@ -34,6 +34,22 @@ public class ProcessResource {
         this.taskDAO = taskDAO;
     }
 
+    @POST
+    @UnitOfWork
+    public Response create(Process process) {
+        try {
+            Process createdProcess = processDAO.create(process);
+            URI uri = uriForIdentifiable(createdProcess, ProcessResource.class);
+            return created(createdProcess, uri);
+        } catch (IdentifierSpecifiedForCreatingException e) {
+            return error(BAD_REQUEST, e.getMessage());
+        } catch (TaskNotFoundException e) {
+            return error(NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            return error(INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
     @GET
     @Path("{processId}")
     @UnitOfWork
@@ -43,22 +59,6 @@ public class ProcessResource {
             return ok(processOptional.get());
         }
         return error(NOT_FOUND, "Process not found");
-    }
-
-    @POST
-    @UnitOfWork
-    public Response create(Process process) {
-        try {
-            Process createdProcess = processDAO.create(process);
-            URI uri = uriForCreated(createdProcess, ProcessResource.class);
-            return created(createdProcess, uri);
-        } catch (IdentifierSpecifiedForCreatingException e) {
-            return error(BAD_REQUEST, e.getMessage());
-        } catch (TaskNotFoundException e) {
-            return error(NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
-            return error(INTERNAL_SERVER_ERROR, e.getMessage());
-        }
     }
 
     @GET
@@ -107,6 +107,7 @@ public class ProcessResource {
     }
 
     // TODO should be removed
+    // Can be used for testing
     @GET
     @Path("test")
     @UnitOfWork
