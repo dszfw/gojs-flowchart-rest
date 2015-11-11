@@ -5,9 +5,9 @@ import custom.domain.Task;
 import custom.dao.ProcessDAO;
 import custom.domain.Process;
 import custom.dao.TaskDAO;
-import custom.dto.ErrorDTO;
-import custom.dto.process.ProcessDTO;
+import custom.dto.BaseDTO;
 import com.google.common.base.Optional;
+import custom.exception.dao.IdentifierSpecifiedForCreatingException;
 import custom.exception.dao.ProcessNotFoundException;
 import custom.exception.dao.TaskNotFoundException;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -16,10 +16,10 @@ import io.dropwizard.jersey.params.LongParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 
-import static javax.ws.rs.client.Entity.json;
+import static custom.Utils.*;
 import static javax.ws.rs.core.Response.Status.*;
 
 @Path("/processes")
@@ -37,80 +37,73 @@ public class ProcessResource {
     @GET
     @Path("{processId}")
     @UnitOfWork
-    public Response getProcess(@PathParam("processId") LongParam processId) {
+    public Response get(@PathParam("processId") LongParam processId) {
         Optional<Process> processOptional = processDAO.findById(processId.get());
         if (processOptional.isPresent()) {
             return ok(processOptional.get());
         }
-        return errorResponse(NOT_FOUND, "Process not found");
+        return error(NOT_FOUND, "Process not found");
     }
 
     @POST
     @UnitOfWork
-    public Response createProcess(Process process) {
+    public Response create(Process process) {
         try {
-            Process p = processDAO.create(process);
-            return ok(p);
+            Process createdProcess = processDAO.create(process);
+            URI uri = uriForCreated(createdProcess, ProcessResource.class);
+            return created(createdProcess, uri);
+        } catch (IdentifierSpecifiedForCreatingException e) {
+            return error(BAD_REQUEST, e.getMessage());
         } catch (TaskNotFoundException e) {
-            return errorResponse(BAD_REQUEST, e.getMessage());
+            return error(NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            return errorResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+            return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
     @GET
     @UnitOfWork
-    public Response listProcesses() {
+    public Response list() {
         try {
-            List<Process> processes = processDAO.findAll();
-            List<ProcessDTO> dtos = new ArrayList<>();
-            for (Process process : processes) {
-                dtos.add(new ProcessDTO(process));
-            }
+            List<BaseDTO> dtos = collectionDto(processDAO.findAll());
             return Response.ok(dtos).build();
         } catch (Exception e) {
-            return errorResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+            return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
     @PUT
-    @Path("{processId}")
+    @Path("{id}")
     @UnitOfWork
-    public Response update(@PathParam("processId") LongParam processId, Process process) {
+    public Response update(@PathParam("id") LongParam id, Process process) {
+        if (process.getId() != 0) {
+            return error(BAD_REQUEST, "Process ID has been specified in request body");
+        }
         try {
-            Optional<Process> processOptional = processDAO.findById(processId.get());
-            if (processOptional.isPresent()) {
-                Process p = processDAO.update(processOptional.get());
-                return ok(p);
-            }
-            return errorResponse(NOT_FOUND, "Process not found");
+            process.setId(id.get());
+            Process updated = processDAO.update(process);
+            return ok(updated);
+        } catch (ProcessNotFoundException | TaskNotFoundException e) {
+            return error(NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            return errorResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+            return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
     @DELETE
-    @Path("{processId}")
+    @Path("{id}")
     @UnitOfWork
-    public Response deleteProcess(@PathParam("processId") LongParam processId) {
+    public Response delete(@PathParam("id") LongParam id) {
         try {
-            Optional<Process> processOptional = processDAO.findById(processId.get());
-            if (processOptional.isPresent()) {
-                processDAO.delete(processOptional.get());
-                return Response.noContent().build();
-            }
-            return errorResponse(NOT_FOUND, "Process not found");
+            Process process = new Process();
+            process.setId(id.get());
+            processDAO.delete(process);
+            return Response.noContent().build();
+        } catch (ProcessNotFoundException e) {
+            return error(NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            return errorResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+            return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
-    }
-
-    private Response ok(Process p) {
-        return Response.ok(new ProcessDTO(p)).build();
-    }
-
-    private Response errorResponse(Response.StatusType statusType, String msg) {
-        return Response.status(statusType).entity(json(new ErrorDTO(msg))).build();
     }
 
     // TODO should be removed

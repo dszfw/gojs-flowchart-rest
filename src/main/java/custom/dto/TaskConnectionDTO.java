@@ -2,7 +2,7 @@ package custom.dto;
 
 import custom.domain.TaskConnection;
 
-public class TaskConnectionDTO {
+public class TaskConnectionDTO implements BaseDTO {
     private long id;
     private String name;
     private long from;

@@ -44,6 +44,15 @@ public class TaskDAO extends AbstractDAO<Task> {
         currentSession().delete(task);
     }
 
+    public boolean isExist(long id) {
+        Optional<Task> task = findById(id);
+        if (task.isPresent()) {
+            currentSession().evict(task.get());
+            return true;
+        }
+        return false;
+    }
+
     private void assocWithProcess(Task task) {
         for (ProcessTask assoc : task.getProcessAssoc()) {
             long processId = assoc.getProcess().getId();

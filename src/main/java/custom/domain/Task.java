@@ -3,6 +3,8 @@ package custom.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import custom.dto.BaseDTO;
+import custom.dto.task.TaskDTO;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,13 +27,7 @@ import static javax.persistence.FetchType.LAZY;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = Task.class)
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "name", nullable = true)
-    private String name;
+public class Task extends BaseEntity {
 
     @Column(name = "category", nullable = true)
     private String category;
@@ -54,7 +50,7 @@ public class Task {
     }
 
     public Task(String name) {
-        this.name = name;
+        super(name);
     }
 
     public Set<TaskConnection> getFromConnections() {
@@ -71,22 +67,6 @@ public class Task {
 
     public void setToConnections(Set<TaskConnection> toConnections) {
         this.toConnections = toConnections;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCategory() {
@@ -113,4 +93,8 @@ public class Task {
         this.processAssoc = processAssoc;
     }
 
+    @Override
+    public BaseDTO createDto() {
+        return new TaskDTO(this);
+    }
 }

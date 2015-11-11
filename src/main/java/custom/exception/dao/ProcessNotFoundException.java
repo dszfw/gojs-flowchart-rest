@@ -4,6 +4,7 @@ import custom.exception.DropwizardExampleException;
 
 public class ProcessNotFoundException extends DropwizardExampleException {
     public ProcessNotFoundException() {
+        super("Process not found");
     }
 
     public ProcessNotFoundException(String message) {

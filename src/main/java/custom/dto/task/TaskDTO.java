@@ -2,12 +2,13 @@ package custom.dto.task;
 
 import custom.domain.ProcessTask;
 import custom.domain.Task;
+import custom.dto.BaseDTO;
 import custom.dto.process.ProcessDTOinTaskDTO;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class TaskDTO {
+public class TaskDTO implements BaseDTO {
     private long id;
     private String name;
     private String category;

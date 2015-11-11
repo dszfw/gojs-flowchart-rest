@@ -45,10 +45,10 @@
 
         <createTable tableName="process_task">
             <column name="processId" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="true"/>
             </column>
             <column name="taskId" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="true"/>
             </column>
             <column name="position" type="bigint">
                 <constraints nullable="false"/>
@@ -59,13 +59,15 @@
                                  baseColumnNames="processId"
                                  constraintName="fk_process_task_1"
                                  referencedTableName="processes"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseTableName="process_task"
                                  baseColumnNames="taskId"
                                  constraintName="fk_process_task_2"
                                  referencedTableName="tasks"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
 
         <createTable tableName="task_connections">
             <column name="id" type="bigint" autoIncrement="true">

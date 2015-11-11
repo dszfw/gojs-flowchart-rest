@@ -4,12 +4,14 @@ import custom.domain.Process;
 import custom.domain.ProcessTask;
 import com.google.common.base.Optional;
 import custom.domain.Task;
+import custom.exception.dao.IdentifierSpecifiedForCreatingException;
 import custom.exception.dao.ProcessNotFoundException;
 import custom.exception.dao.TaskNotFoundException;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ProcessDAO extends AbstractDAO<Process> {
 
@@ -32,30 +34,46 @@ public class ProcessDAO extends AbstractDAO<Process> {
     }
 
     public Process create(Process process) {
+        if (process.getId() != 0) {
+            throw new IdentifierSpecifiedForCreatingException("ID was specified " +
+                    "for new process, it will be created automatiscally");
+        }
         assocWithTask(process);
         return persist(process);
     }
 
     public Process update(Process process) {
-        if (!findById(process.getId()).isPresent()) {
-            throw new ProcessNotFoundException("Process not found");
+        if (!isExist(process.getId())) {
+            throw new ProcessNotFoundException();
         }
         assocWithTask(process);
         return persist(process);
     }
 
     public void delete(Process process) {
+        if (!isExist(process.getId())) {
+            throw new ProcessNotFoundException();
+        }
         currentSession().delete(process);
+    }
+
+    public boolean isExist(long id) {
+        Optional<Process> process = findById(id);
+        if (process.isPresent()) {
+            currentSession().evict(process.get());
+            return true;
+        }
+        return false;
     }
 
     private void assocWithTask(Process process) {
         for (ProcessTask assoc : process.getTaskAssoc()) {
             long taskId = assoc.getTask().getId();
-            Optional<Task> taskOptional = taskDAO.findById(taskId);
-            if (!taskOptional.isPresent()) {
+            Optional<Task> task = taskDAO.findById(taskId);
+            if (!task.isPresent()) {
                 throw new TaskNotFoundException("Task with given Id doesn't exist");
             }
-            assoc.setTask(taskOptional.get());
+            assoc.setTask(task.get());
             assoc.setProcess(process);
         }
     }

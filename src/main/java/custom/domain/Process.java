@@ -3,6 +3,8 @@ package custom.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import custom.dto.BaseDTO;
+import custom.dto.process.ProcessDTO;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,13 +27,7 @@ import static javax.persistence.FetchType.LAZY;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id", scope = Process.class)
-public class Process {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "name", nullable = true)
-    private String name;
+public class Process extends BaseEntity {
 
     @OneToMany(mappedBy = "process", cascade = ALL)
     private List<ProcessTask> taskAssoc = new ArrayList<>();
@@ -44,23 +40,7 @@ public class Process {
     }
 
     public Process(String name) {
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        super(name);
     }
 
     public List<ProcessTask> getTaskAssoc() {
@@ -77,5 +57,10 @@ public class Process {
 
     public void setConnections(Set<TaskConnection> connections) {
         this.connections = connections;
+    }
+
+    @Override
+    public BaseDTO createDto() {
+        return new ProcessDTO(this);
     }
 }

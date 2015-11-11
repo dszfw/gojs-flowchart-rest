@@ -3,13 +3,14 @@ package custom.dto.process;
 import custom.domain.Process;
 import custom.domain.ProcessTask;
 import custom.domain.TaskConnection;
+import custom.dto.BaseDTO;
 import custom.dto.TaskConnectionDTO;
 import custom.dto.task.TaskDTOinProcessDTO;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProcessDTO {
+public class ProcessDTO implements BaseDTO {
     private long id;
     private String name;
     private Set<TaskDTOinProcessDTO> tasks = new HashSet<>();

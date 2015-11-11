@@ -1,5 +1,8 @@
 package custom.domain;
 
+import custom.dto.BaseDTO;
+import custom.dto.TaskConnectionDTO;
+
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
@@ -12,13 +15,7 @@ import static javax.persistence.FetchType.LAZY;
                 query = "SELECT tc FROM TaskConnection tc"
         )
 })
-public class TaskConnection {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "name", nullable = true)
-    private String name;
+public class TaskConnection extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "fromId", nullable = false)
@@ -39,14 +36,6 @@ public class TaskConnection {
     private String toConnector;
 
     public TaskConnection() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Task getFrom() {
@@ -81,20 +70,17 @@ public class TaskConnection {
         this.toConnector = toConnector;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Process getProcess() {
         return process;
     }
 
     public void setProcess(Process process) {
         this.process = process;
+    }
+
+    @Override
+    public BaseDTO createDto() {
+        return new TaskConnectionDTO(this);
     }
 
     // TODO equals and hashcode

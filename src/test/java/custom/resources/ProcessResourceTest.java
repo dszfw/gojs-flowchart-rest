@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.client.Entity.entity;
 import static javax.ws.rs.client.Entity.json;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,7 +79,7 @@ public class ProcessResourceTest {
     }
 
     private void thenCreated(Response response, Process process) {
-        assertThat(response.getStatusInfo()).isEqualTo(OK);
+        assertThat(response.getStatusInfo()).isEqualTo(CREATED);
         ProcessDTO processDTO = response.readEntity(ProcessDTO.class);
         assertThat(processDTO.getName()).isEqualTo(process.getName());
     }
