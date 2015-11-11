@@ -41,6 +41,7 @@ public class ProcessResourceTest {
 
     private static final ProcessDAO processDAO = mock(ProcessDAO.class);
     private static final TaskDAO taskDAO = mock(TaskDAO.class);
+    public static final Class<RefactoredProcessResource> RESOURCE_CLASS = RefactoredProcessResource.class;
 
     private Process process;
     private Response response;
@@ -50,7 +51,8 @@ public class ProcessResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .addResource(new ProcessResource(processDAO, taskDAO))
+//            .addResource(new ProcessResource(processDAO, taskDAO))
+            .addResource(new RefactoredProcessResource(processDAO))
             .build();
 
     private Client client = resources.client();
@@ -182,13 +184,13 @@ public class ProcessResourceTest {
     }
 
     private void whenDeleteRequestPerform() {
-        response = client.target(uriForIdentifiable(processId, ProcessResource.class))
+        response = client.target(uriForIdentifiable(processId, RESOURCE_CLASS))
                 .request(APPLICATION_JSON_TYPE)
                 .delete();
     }
 
     private void whenUpdateRequestPerform() {
-        response = client.target(uriForIdentifiable(processId, ProcessResource.class))
+        response = client.target(uriForIdentifiable(processId, RESOURCE_CLASS))
                 .request(APPLICATION_JSON_TYPE)
                 .put(json(process));
         buildProcessDto();
@@ -206,7 +208,7 @@ public class ProcessResourceTest {
     }
 
     private void whenGetAllRequestPerform() {
-        response = client.target(uriForCollection(ProcessResource.class))
+        response = client.target(uriForCollection(RESOURCE_CLASS))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
     }
@@ -233,7 +235,7 @@ public class ProcessResourceTest {
     }
 
     private void whenGetRequestPerform() {
-        response = client.target(uriForIdentifiable(processId, ProcessResource.class))
+        response = client.target(uriForIdentifiable(processId, RESOURCE_CLASS))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
         buildProcessDto();
@@ -278,7 +280,7 @@ public class ProcessResourceTest {
     }
 
     private void whenCreateRequestPerform() {
-        response = client.target("/processes")
+        response = client.target(uriForCollection(RESOURCE_CLASS))
                 .request(APPLICATION_JSON_TYPE)
                 .post(json(process));
         buildProcessDto();

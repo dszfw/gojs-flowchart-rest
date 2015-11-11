@@ -1,6 +1,8 @@
 package custom.exception.dao;
 
-public class IdentifierSpecifiedForCreatingException extends RuntimeException {
+import custom.exception.DropwizardExampleException;
+
+public class IdentifierSpecifiedForCreatingException extends DropwizardExampleException {
 
     public IdentifierSpecifiedForCreatingException() {
     }

@@ -1,0 +1,16 @@
+package custom.exception.dao;
+
+import custom.exception.DropwizardExampleException;
+
+public class NotFoundException extends DropwizardExampleException {
+    public NotFoundException() {
+    }
+
+    public NotFoundException(String message) {
+        super(message);
+    }
+
+    public NotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

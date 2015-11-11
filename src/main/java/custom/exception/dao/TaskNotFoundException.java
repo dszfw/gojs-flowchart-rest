@@ -1,8 +1,6 @@
 package custom.exception.dao;
 
-import custom.exception.DropwizardExampleException;
-
-public class TaskNotFoundException extends DropwizardExampleException {
+public class TaskNotFoundException extends NotFoundException {
     public TaskNotFoundException() {
     }
 

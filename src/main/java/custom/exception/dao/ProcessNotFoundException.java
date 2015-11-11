@@ -1,8 +1,6 @@
 package custom.exception.dao;
 
-import custom.exception.DropwizardExampleException;
-
-public class ProcessNotFoundException extends DropwizardExampleException {
+public class ProcessNotFoundException extends NotFoundException {
     public ProcessNotFoundException() {
         super("Process not found");
     }
