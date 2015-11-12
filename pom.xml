@@ -11,6 +11,7 @@
     <name>Dropwizard Example Application</name>
 
     <properties>
+        <dropwizard.version>0.9.1</dropwizard.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -38,7 +39,7 @@
             <dependency>
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-bom</artifactId>
-                <version>${project.version}</version>
+                <version>${dropwizard.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -121,9 +122,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

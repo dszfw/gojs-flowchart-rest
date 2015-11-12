@@ -7,13 +7,11 @@ import custom.domain.Task;
 import custom.exception.dao.IdentifierSpecifiedForCreatingException;
 import custom.exception.dao.ProcessNotFoundException;
 import custom.exception.dao.TaskNotFoundException;
-import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
-public class ProcessDAO extends AbstractDAO<Process> {
+public class ProcessDAO extends BaseDAO<Process> {
 
     private TaskDAO taskDAO;
 
