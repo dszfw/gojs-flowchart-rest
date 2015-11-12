@@ -21,9 +21,9 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 abstract public class BaseResource {
 
-    public Response create(BaseEntity entity) {
+    protected Response createProcess(Work work) {
         try {
-            BaseEntity createdEntity = createInternal(entity);
+            BaseEntity createdEntity = work.entity();
             URI uri = uriForIdentifiable(createdEntity, getClass());
             return created(createdEntity, uri);
         } catch (IdentifierSpecifiedForCreatingException e) {
@@ -35,30 +35,30 @@ abstract public class BaseResource {
         }
     }
 
-    public Response get(LongParam id) {
-        Optional<? extends BaseEntity> entityOptional = getInternal(id.get());
+    protected Response getProcess(Work work) {
+        Optional<? extends BaseEntity> entityOptional = work.entityOptional();
         if (entityOptional.isPresent()) {
             return ok(entityOptional.get());
         }
-        return error(NOT_FOUND, "Process not found");
+        return error(NOT_FOUND, "Not found");
     }
 
-    public Response list() {
+    protected Response listProcesses(Work work) {
         try {
-            List<BaseDTO> dtos = collectionDto(listInternal());
+            List<BaseDTO> dtos = collectionDto(work.entities());
             return Response.ok(dtos).build();
         } catch (Exception e) {
             return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
-    public Response update(LongParam id, BaseEntity entity) {
+    protected Response updateProcess(LongParam id, BaseEntity entity, Work work) {
         if (entity.getId() != 0) {
-            return error(BAD_REQUEST, "Process ID has been specified in request body");
+            return error(BAD_REQUEST, "ID has been specified in request body");
         }
         try {
             entity.setId(id.get());
-            BaseEntity updated = updateInternal(entity);
+            BaseEntity updated = work.entity();
             return ok(updated);
         } catch (NotFoundException e) {
             return error(NOT_FOUND, e.getMessage());
@@ -67,9 +67,9 @@ abstract public class BaseResource {
         }
     }
 
-    public Response delete(LongParam id) {
+    protected Response deleteProcess(Work work) {
         try {
-            deleteInternal(id.get());
+            work.doWork();
             return Response.noContent().build();
         } catch (NotFoundException e) {
             return error(NOT_FOUND, e.getMessage());
@@ -77,16 +77,6 @@ abstract public class BaseResource {
             return error(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-
-    protected abstract BaseEntity createInternal(BaseEntity entity);
-
-    protected abstract Optional<? extends BaseEntity> getInternal(long aLong);
-
-    protected abstract List<? extends BaseEntity> listInternal();
-
-    protected abstract BaseEntity updateInternal(BaseEntity entity);
-
-    protected abstract void deleteInternal(long id);
 
     private Response error(Response.StatusType statusType, String msg) {
         return Response.status(statusType)
@@ -107,4 +97,3 @@ abstract public class BaseResource {
         return dtos;
     }
 }
-

@@ -41,7 +41,7 @@ public class ProcessResourceTest {
 
     private static final ProcessDAO processDAO = mock(ProcessDAO.class);
     private static final TaskDAO taskDAO = mock(TaskDAO.class);
-    public static final Class<RefactoredProcessResource> RESOURCE_CLASS = RefactoredProcessResource.class;
+    public static final Class<ProcessResource> RESOURCE_CLASS = ProcessResource.class;
 
     private Process process;
     private Response response;
@@ -51,8 +51,7 @@ public class ProcessResourceTest {
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
-//            .addResource(new ProcessResource(processDAO, taskDAO))
-            .addResource(new RefactoredProcessResource(processDAO))
+            .addResource(new ProcessResource(processDAO))
             .build();
 
     private Client client = resources.client();
@@ -262,7 +261,6 @@ public class ProcessResourceTest {
                 .thenReturn(Optional.of(withGivenId(process)));
         when(processDAO.findAll())
                 .thenReturn(processes);
-//        doNothing().when(processDAO).delete(any(Process.class));
     }
 
     private Process withGivenId(Process process) {
