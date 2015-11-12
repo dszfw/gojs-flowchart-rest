@@ -13,7 +13,18 @@ public abstract class BaseDAO <E extends BaseEntity> extends AbstractDAO<E>{
         super(sessionFactory);
     }
 
-    public abstract Optional<E> findById(Long id);
+    public Optional<E> findById(Long id) {
+        return Optional.fromNullable(get(id));
+    }
+
+    public boolean isExist(long id) {
+        Optional<E> optionalEntity = findById(id);
+        if (optionalEntity.isPresent()) {
+            currentSession().evict(optionalEntity.get());
+            return true;
+        }
+        return false;
+    }
 
     public abstract List<E> findAll();
 
@@ -22,7 +33,5 @@ public abstract class BaseDAO <E extends BaseEntity> extends AbstractDAO<E>{
     public abstract E update(E process);
 
     public abstract void delete(E process);
-
-    public abstract boolean isExist(long id);
 
 }

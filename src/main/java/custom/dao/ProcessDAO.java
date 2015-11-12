@@ -23,10 +23,6 @@ public class ProcessDAO extends BaseDAO<Process> {
         super(factory);
     }
 
-    public Optional<Process> findById(Long id) {
-        return Optional.fromNullable(get(id));
-    }
-
     public List<Process> findAll() {
         return list(namedQuery("custom.domain.Process.findAll"));
     }
@@ -53,15 +49,6 @@ public class ProcessDAO extends BaseDAO<Process> {
             throw new ProcessNotFoundException();
         }
         currentSession().delete(process);
-    }
-
-    public boolean isExist(long id) {
-        Optional<Process> process = findById(id);
-        if (process.isPresent()) {
-            currentSession().evict(process.get());
-            return true;
-        }
-        return false;
     }
 
     private void assocWithTask(Process process) {

@@ -21,7 +21,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 abstract public class BaseResource {
 
-    protected Response createProcess(Work work) {
+    protected Response create(Work work) {
         try {
             BaseEntity createdEntity = work.entity();
             URI uri = uriForIdentifiable(createdEntity, getClass());
@@ -35,7 +35,7 @@ abstract public class BaseResource {
         }
     }
 
-    protected Response getProcess(Work work) {
+    protected Response get(Work work) {
         Optional<? extends BaseEntity> entityOptional = work.entityOptional();
         if (entityOptional.isPresent()) {
             return ok(entityOptional.get());
@@ -43,7 +43,7 @@ abstract public class BaseResource {
         return error(NOT_FOUND, "Not found");
     }
 
-    protected Response listProcesses(Work work) {
+    protected Response list(Work work) {
         try {
             List<BaseDTO> dtos = collectionDto(work.entities());
             return Response.ok(dtos).build();
@@ -52,7 +52,7 @@ abstract public class BaseResource {
         }
     }
 
-    protected Response updateProcess(LongParam id, BaseEntity entity, Work work) {
+    protected Response update(LongParam id, BaseEntity entity, Work work) {
         if (entity.getId() != 0) {
             return error(BAD_REQUEST, "ID has been specified in request body");
         }
@@ -67,7 +67,7 @@ abstract public class BaseResource {
         }
     }
 
-    protected Response deleteProcess(Work work) {
+    protected Response delete(Work work) {
         try {
             work.doWork();
             return Response.noContent().build();

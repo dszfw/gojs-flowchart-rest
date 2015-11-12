@@ -29,7 +29,6 @@ import io.dropwizard.views.ViewBundle;
 import custom.domain.ProcessTask;
 import custom.domain.Task;
 import custom.domain.TaskConnection;
-import custom.resources.LegacyProcessResource;
 import custom.resources.TaskConnectionResource;
 import custom.resources.TaskResource;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -106,7 +105,6 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         env.jersey().register(new ProtectedResource());
         env.jersey().register(new PeopleResource(personDAO));
         env.jersey().register(new PersonResource(personDAO));
-        env.jersey().register(new LegacyProcessResource(processDAO, taskDAO));
         env.jersey().register(new ProcessResource(processDAO));
         env.jersey().register(new TaskResource(taskDAO));
         env.jersey().register(new TaskConnectionResource(taskConnectionDAO));

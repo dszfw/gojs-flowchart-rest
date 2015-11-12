@@ -1,13 +1,15 @@
 package custom.dto;
 
-import custom.domain.TaskConnection;
+import com.google.common.base.Optional;
+import custom.domain.Process;
+import custom.domain.*;
 
 public class TaskConnectionDTO implements BaseDTO {
-    private long id;
+    private Long id;
     private String name;
-    private long from;
-    private long to;
-    private long process;
+    private Long from;
+    private Long to;
+    private Long process;
     private String fromConnector;
     private String toConnector;
 
@@ -17,9 +19,12 @@ public class TaskConnectionDTO implements BaseDTO {
     public TaskConnectionDTO(TaskConnection connection) {
         this.id = connection.getId();
         this.name = connection.getName();
-        this.from = connection.getFrom().getId();
-        this.to = connection.getTo().getId();
-        this.process = connection.getProcess().getId();
+        Optional<Task> fromNullable = Optional.fromNullable(connection.getFrom());
+        Optional<Task> toNullable = Optional.fromNullable(connection.getTo());
+        this.from = fromNullable.isPresent() ? fromNullable.get().getId() : null;
+        this.to = toNullable.isPresent() ? toNullable.get().getId() : null;
+        Optional<Process> processNullable1 = Optional.fromNullable(connection.getProcess());
+        this.process = processNullable1.isPresent() ? processNullable1.get().getId() : null;
         this.fromConnector = connection.getFromConnector();
         this.toConnector = connection.getToConnector();
     }
@@ -40,27 +45,27 @@ public class TaskConnectionDTO implements BaseDTO {
         this.name = name;
     }
 
-    public long getFrom() {
+    public Long getFrom() {
         return from;
     }
 
-    public void setFrom(long from) {
+    public void setFrom(Long from) {
         this.from = from;
     }
 
-    public long getTo() {
+    public Long getTo() {
         return to;
     }
 
-    public void setTo(long to) {
+    public void setTo(Long to) {
         this.to = to;
     }
 
-    public long getProcess() {
+    public Long getProcess() {
         return process;
     }
 
-    public void setProcess(long process) {
+    public void setProcess(Long process) {
         this.process = process;
     }
 

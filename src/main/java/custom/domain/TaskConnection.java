@@ -38,6 +38,10 @@ public class TaskConnection extends BaseEntity {
     public TaskConnection() {
     }
 
+    public TaskConnection(String name) {
+        super(name);
+    }
+
     public Task getFrom() {
         return from;
     }

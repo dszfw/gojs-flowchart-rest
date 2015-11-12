@@ -1,25 +1,19 @@
 package custom.resources;
 
 import custom.dao.TaskDAO;
-import custom.dto.task.TaskDTO;
+import custom.domain.*;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
-import custom.domain.Task;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
-
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 
 @Path("/tasks")
 @Produces(MediaType.APPLICATION_JSON)
-public class TaskResource {
+public class TaskResource extends BaseResource {
 
     private final TaskDAO taskDAO;
 
@@ -27,58 +21,65 @@ public class TaskResource {
         this.taskDAO = taskDAO;
     }
 
-    @GET
-    @Path("{taskId}")
-    @UnitOfWork
-    public TaskDTO getTask(@PathParam("taskId") LongParam taskId) {
-        return new TaskDTO(findSafely(taskId.get()));
-    }
-
-    @GET
-    @UnitOfWork
-    public List<TaskDTO> listTasks() {
-        List<Task> tasks = taskDAO.findAll();
-        List<TaskDTO> dtos = new ArrayList<>();
-        for (Task task : tasks) {
-            dtos.add(new TaskDTO(task));
-        }
-        return dtos;
-    }
-
     @POST
     @UnitOfWork
-    public TaskDTO createTask(Task task) {
-        Task t = taskDAO.create(task);
-        return new TaskDTO(t);
+    public Response create(Task task) {
+        return create(new Work() {
+            @Override
+            public BaseEntity entity() {
+                return taskDAO.create(task);
+            }
+        });
+    }
+
+    @GET
+    @Path("{id}")
+    @UnitOfWork
+    public Response get(@PathParam("id") LongParam id) {
+        return get(new Work() {
+            @Override
+            public Optional<? extends BaseEntity> entityOptional() {
+                return taskDAO.findById(id.get());
+            }
+        });
+    }
+
+    @GET
+    @UnitOfWork
+    public Response list() {
+        return list(new Work() {
+            @Override
+            public List<? extends BaseEntity> entities() {
+                return taskDAO.findAll();
+            }
+        });
     }
 
     @PUT
+    @Path("{id}")
     @UnitOfWork
-    public TaskDTO update(Task task) {
-        Task t = taskDAO.update(task);
-        return new TaskDTO(t);
+    public Response update(@PathParam("id") LongParam id, Task task) {
+        Work work = new Work() {
+            @Override
+            public BaseEntity entity() {
+                return taskDAO.update(task);
+            }
+        };
+        return update(id, task, work);
     }
 
     @DELETE
-    @Path("{taskId}")
+    @Path("{id}")
     @UnitOfWork
-    public Response deleteTask(@PathParam("taskId") LongParam taskId) {
-        try {
-            Task task = findSafely(taskId.get());
-            taskDAO.delete(task);
-            return Response.status(NO_CONTENT).build();
-        } catch (NotFoundException e) {
-            return Response.status(NOT_FOUND).build();
-        } catch (Exception e) {
-            return Response.status(INTERNAL_SERVER_ERROR).build();
-        }
+    public Response delete(@PathParam("id") LongParam id) {
+        return delete(new Work() {
+            @Override
+            public void doWork() {
+                Task task = new Task();
+                task.setId(id.get());
+                taskDAO.delete(task);
+            }
+        });
     }
 
-    private Task findSafely(long taskId) {
-        final Optional<Task> task = taskDAO.findById(taskId);
-        if (!task.isPresent()) {
-            throw new NotFoundException("No such task.");
-        }
-        return task.get();
-    }
 }

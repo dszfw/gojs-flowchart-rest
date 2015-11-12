@@ -3,14 +3,13 @@ package custom.dao;
 import custom.domain.Process;
 import com.google.common.base.Optional;
 import custom.exception.DropwizardExampleException;
-import io.dropwizard.hibernate.AbstractDAO;
 import custom.domain.ProcessTask;
 import custom.domain.Task;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public class TaskDAO extends AbstractDAO<Task> {
+public class TaskDAO extends BaseDAO<Task> {
 
     private ProcessDAO processDAO;
 
@@ -20,10 +19,6 @@ public class TaskDAO extends AbstractDAO<Task> {
 
     public void setProcessDAO(ProcessDAO processDAO) {
         this.processDAO = processDAO;
-    }
-
-    public Optional<Task> findById(Long id) {
-        return Optional.fromNullable(get(id));
     }
 
     public List<Task> findAll() {
@@ -42,15 +37,6 @@ public class TaskDAO extends AbstractDAO<Task> {
 
     public void delete(Task task) {
         currentSession().delete(task);
-    }
-
-    public boolean isExist(long id) {
-        Optional<Task> task = findById(id);
-        if (task.isPresent()) {
-            currentSession().evict(task.get());
-            return true;
-        }
-        return false;
     }
 
     private void assocWithProcess(Task task) {

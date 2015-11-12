@@ -42,8 +42,7 @@ public class ProcessResourceTest extends BaseResourceTest<ProcessResource, Proce
 
     @Override
     protected GenericType<List<ProcessDTO>> getDtosGenericType() {
-        return new GenericType<List<ProcessDTO>>(){
-        };
+        return new GenericType<List<ProcessDTO>>(){};
     }
 
     @Override

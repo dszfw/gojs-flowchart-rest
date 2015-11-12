@@ -24,11 +24,11 @@ public class ProcessResource extends BaseResource {
 
     @POST
     @UnitOfWork
-    public Response create(Process entity) {
-        return createProcess(new Work() {
+    public Response create(Process process) {
+        return create(new Work() {
             @Override
             public BaseEntity entity() {
-                return processDAO.create(entity);
+                return processDAO.create(process);
             }
         });
     }
@@ -37,7 +37,7 @@ public class ProcessResource extends BaseResource {
     @Path("{id}")
     @UnitOfWork
     public Response get(@PathParam("id") LongParam id) {
-        return getProcess(new Work() {
+        return get(new Work() {
             @Override
             public Optional<? extends BaseEntity> entityOptional() {
                 return processDAO.findById(id.get());
@@ -48,7 +48,7 @@ public class ProcessResource extends BaseResource {
     @GET
     @UnitOfWork
     public Response list() {
-        return listProcesses(new Work() {
+        return list(new Work() {
             @Override
             public List<? extends BaseEntity> entities() {
                 return processDAO.findAll();
@@ -66,14 +66,14 @@ public class ProcessResource extends BaseResource {
                 return processDAO.update(process);
             }
         };
-        return updateProcess(id, process, work);
+        return update(id, process, work);
     }
 
     @DELETE
     @Path("{id}")
     @UnitOfWork
     public Response delete(@PathParam("id") LongParam id) {
-        return deleteProcess(new Work() {
+        return delete(new Work() {
             @Override
             public void doWork() {
                 Process process = new Process();
