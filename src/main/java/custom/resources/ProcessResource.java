@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/processes")
+@Path("processes")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProcessResource extends BaseResource {
 
