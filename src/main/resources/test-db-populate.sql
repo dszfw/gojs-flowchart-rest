@@ -1,3 +1,11 @@
+INSERT INTO processes (id, name) VALUES (10000, 'go.GraphLinksModel');
+INSERT INTO tasks (id, name, category, loc) VALUES (101, "Kookie Brittle", "Comment", "360 -10");
+INSERT INTO tasks (id, name, category, loc) VALUES (102, "Start", "Start", "175 0");
+INSERT INTO process_task (processId, taskId, position) VALUES (100, 101, -13);
+INSERT INTO process_task (processId, taskId, position) VALUES (100, 102, -1);
+INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (100, 100, 101, 102, null, 'A', 'C');
+
+-- Integration tests data
 INSERT INTO processes (id, name) VALUES (1000, 'Some Process');
 INSERT INTO processes (id, name) VALUES (1001, 'Process#0');
 INSERT INTO processes (id, name) VALUES (1002, 'Process#1');
