@@ -1,4 +1,4 @@
-INSERT INTO processes (id, name) VALUES (10000, 'go.GraphLinksModel');
+INSERT INTO processes (id, name) VALUES (100, 'go.GraphLinksModel');
 INSERT INTO tasks (id, name, category, loc) VALUES (101, "Kookie Brittle", "Comment", "360 -10");
 INSERT INTO tasks (id, name, category, loc) VALUES (102, "Start", "Start", "175 0");
 INSERT INTO process_task (processId, taskId, position) VALUES (100, 101, -13);
