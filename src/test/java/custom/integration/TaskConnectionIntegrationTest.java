@@ -15,6 +15,10 @@ public class TaskConnectionIntegrationTest extends BaseCrudIntegrationTest<TaskC
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        setResourceClass(TaskConnectionResource.class);
+        setEntityClass(TaskConnection.class);
+        setDtoClass(TaskConnectionDTO.class);
+        setDtoGenericType(new GenericType<List<TaskConnectionDTO>>() {});
     }
 
     @After
@@ -40,28 +44,8 @@ public class TaskConnectionIntegrationTest extends BaseCrudIntegrationTest<TaskC
     }
 
     @Override
-    protected Class<TaskConnectionResource> getResourceClass() {
-        return TaskConnectionResource.class;
-    }
-
-    @Override
-    protected Class<TaskConnection> getEntityClass() {
-        return TaskConnection.class;
-    }
-
-    @Override
     protected TaskConnection createNewEntity(String name) {
         return new TaskConnection(name);
     }
 
-    @Override
-    protected Class<TaskConnectionDTO> getDtoClass() {
-        return TaskConnectionDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<TaskConnectionDTO>> getDtosGenericType() {
-        return new GenericType<List<TaskConnectionDTO>>() {
-        };
-    }
 }

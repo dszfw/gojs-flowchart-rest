@@ -39,6 +39,11 @@ import static org.mockito.Mockito.*;
  */
 abstract public class BaseResourceUnitTest<R extends BaseResource, E extends BaseEntity, D extends BaseDTO> {
 
+    private Class<R> resourceClass;
+    private Class<E> entityClass;
+    private Class<D> dtoClass;
+    private GenericType<List<D>> dtoGenericType;
+
     protected static final ProcessDAO processDAO = mock(ProcessDAO.class);
     protected static final TaskDAO taskDAO = mock(TaskDAO.class);
     protected static final TaskConnectionDAO taskConnectionDAO = mock(TaskConnectionDAO.class);
@@ -69,11 +74,23 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
         reset(processDAO, taskDAO, taskConnectionDAO);
     }
 
-    protected abstract Class<R> getResourceClass();
-    protected abstract Class<E> getEntityClass();
     protected abstract E createNewEntity(String name);
-    protected abstract Class<D> getDtoClass();
-    protected abstract GenericType<List<D>> getDtosGenericType();
+
+    public void setResourceClass(Class<R> resourceClass) {
+        this.resourceClass = resourceClass;
+    }
+
+    public void setEntityClass(Class<E> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    public void setDtoClass(Class<D> dtoClass) {
+        this.dtoClass = dtoClass;
+    }
+
+    public void setDtoGenericType(GenericType<List<D>> dtoGenericType) {
+        this.dtoGenericType = dtoGenericType;
+    }
 
     @Test
     public void testCreate_entityCreatedSuccessfully_created() {
@@ -183,20 +200,20 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
     protected void whenDeleteRequestPerform() {
-        response = client.target(uriForIdentifiable(id, getResourceClass()))
+        response = client.target(uriForIdentifiable(id, resourceClass))
                 .request(APPLICATION_JSON_TYPE)
                 .delete();
     }
 
     protected void whenUpdateRequestPerform() {
-        response = client.target(uriForIdentifiable(id, getResourceClass()))
+        response = client.target(uriForIdentifiable(id, resourceClass))
                 .request(APPLICATION_JSON_TYPE)
                 .put(json(entity));
         buildDto();
     }
 
     protected void thenResponseEntitiesEqualGiven() {
-        List<? extends BaseDTO> dtos = response.readEntity(getDtosGenericType());
+        List<D> dtos = response.readEntity(dtoGenericType);
         for (int i = 0; i < entities.size(); i++) {
             assertThat(dtos.get(i).getId())
                     .isEqualTo(entities.get(i).getId());
@@ -206,7 +223,7 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
     protected void whenGetAllRequestPerform() {
-        response = client.target(uriForCollection(getResourceClass()))
+        response = client.target(uriForCollection(resourceClass))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
     }
@@ -234,7 +251,7 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
     protected void whenGetRequestPerform() {
-        response = client.target(uriForIdentifiable(id, getResourceClass()))
+        response = client.target(uriForIdentifiable(id, resourceClass))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
         buildDto();
@@ -244,21 +261,22 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
         assertThat(response.getStatusInfo()).isEqualTo(status);
     }
 
+    @SuppressWarnings("unchecked")
     protected <Ex extends RuntimeException> void givenDaoActionsFailed(Class<Ex> exClass) {
-        when(dao.create(any(getEntityClass())))
+        when(dao.create(any(entityClass)))
                 .thenThrow(exClass);
-        when(dao.update(any(getEntityClass())))
+        when(dao.update(any(entityClass)))
                 .thenThrow(exClass);
         when(dao.findById(any(Long.class)))
                 .thenReturn(Optional.absent());
-        doThrow(exClass).when(dao).delete(any(getEntityClass()));
+        doThrow(exClass).when(dao).delete(any(entityClass));
     }
 
 
     protected void givenDaoActionsSuccessfully() {
-        when(dao.create(any(getEntityClass())))
+        when(dao.create(any(entityClass)))
                 .thenReturn(withNewId(entity));
-        when(dao.update(any(getEntityClass())))
+        when(dao.update(any(entityClass)))
                 .thenReturn(withGivenId(entity));
         when(dao.findById(any(Long.class)))
                 .thenReturn(Optional.of(withGivenId(entity)));
@@ -281,7 +299,7 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
     protected void whenCreateRequestPerform() {
-        response = client.target(uriForCollection(getResourceClass()))
+        response = client.target(uriForCollection(resourceClass))
                 .request(APPLICATION_JSON_TYPE)
                 .post(json(entity));
         buildDto();
@@ -290,8 +308,9 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
 
     protected void buildDto() {
         try {
-            dto = response.readEntity(getDtoClass());
-        } catch (ProcessingException e) {}
+            dto = response.readEntity(dtoClass);
+        } catch (ProcessingException e) {
+        }
     }
 
     protected void givenEntity(String name) {
@@ -308,6 +327,6 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
     protected String getEntityClassName() {
-        return getEntityClass().getSimpleName();
+        return entityClass.getSimpleName();
     }
 }

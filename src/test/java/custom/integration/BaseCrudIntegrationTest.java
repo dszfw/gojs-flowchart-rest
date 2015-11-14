@@ -44,6 +44,11 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     protected static final String TMP_FILE = createTempFile();
     protected static final String CONFIG_PATH = ResourceHelpers.resourceFilePath("test-example.yml");
 
+    private Class<R> resourceClass;
+    private Class<E> entityClass;
+    private Class<D> dtoClass;
+    private GenericType<List<D>> dtoGenericType;
+
     @ClassRule
     public static final DropwizardAppRule<HelloWorldConfiguration> RULE = new DropwizardAppRule<>(
             HelloWorldApplication.class, CONFIG_PATH, ConfigOverride.config("database.url", "jdbc:h2:" + TMP_FILE));
@@ -76,15 +81,23 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
         client.close();
     }
 
-    protected abstract Class<R> getResourceClass();
+    protected void setResourceClass(Class<R> resourceClass) {
+        this.resourceClass = resourceClass;
+    }
 
-    protected abstract Class<E> getEntityClass();
+    public void setEntityClass(Class<E> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    public void setDtoClass(Class<D> dtoClass) {
+        this.dtoClass = dtoClass;
+    }
+
+    public void setDtoGenericType(GenericType<List<D>> dtoGenericType) {
+        this.dtoGenericType = dtoGenericType;
+    }
 
     protected abstract E createNewEntity(String name);
-
-    protected abstract Class<D> getDtoClass();
-
-    protected abstract GenericType<List<D>> getDtosGenericType();
 
     @Test
     public void testCreate_entityCreatedSuccessfully_created() {
@@ -173,20 +186,20 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     protected void whenDeleteRequestPerform() {
-        response = target.path(uriForIdentifiable(id, getResourceClass()).toString())
+        response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .delete();
     }
 
     protected void whenUpdateRequestPerform() {
-        response = target.path(uriForIdentifiable(id, getResourceClass()).toString())
+        response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .put(json(entity));
         buildDto();
     }
 
     protected void thenResponseEntitiesNotEmptyAndEqualGiven() {
-        List<? extends BaseDTO> dtos = response.readEntity(getDtosGenericType());
+        List<D> dtos = response.readEntity(dtoGenericType);
         assertThat(dtos).isNotEmpty();
 
         Set<Long> actualIds = new HashSet<>();
@@ -197,7 +210,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     protected void whenGetAllRequestPerform() {
-        response = target.path(uriForCollection(getResourceClass()).toString())
+        response = target.path(uriForCollection(resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .get();
     }
@@ -226,7 +239,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     protected void whenGetRequestPerform() {
-        response = target.path(uriForIdentifiable(id, getResourceClass()).toString())
+        response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .get();
         buildDto();
@@ -237,7 +250,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     protected void whenCreateRequestPerform() {
-        response = target.path(uriForCollection(getResourceClass()).toString())
+        response = target.path(uriForCollection(resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .post(json(entity));
         buildDto();
@@ -245,7 +258,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
 
     protected void buildDto() {
         try {
-            dto = response.readEntity(getDtoClass());
+            dto = response.readEntity(dtoClass);
         } catch (ProcessingException e) {
         }
     }
@@ -268,7 +281,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     protected String getEntityClassName() {
-        return getEntityClass().getSimpleName();
+        return entityClass.getSimpleName();
     }
 
     private static String createTempFile() {

@@ -16,6 +16,10 @@ public class TaskResourceUnitTest extends BaseResourceUnitTest<TaskResource, Tas
     @Before
     public void setUp() {
         super.setUp();
+        setResourceClass(TaskResource.class);
+        setEntityClass(Task.class);
+        setDtoClass(TaskDTO.class);
+        setDtoGenericType(new GenericType<List<TaskDTO>>(){});
         entity = new Task();
         dao = taskDAO;
     }
@@ -26,27 +30,8 @@ public class TaskResourceUnitTest extends BaseResourceUnitTest<TaskResource, Tas
     }
 
     @Override
-    protected Class<TaskResource> getResourceClass() {
-        return TaskResource.class;
-    }
-
-    @Override
-    protected Class<Task> getEntityClass() {
-        return Task.class;
-    }
-
-    @Override
     protected Task createNewEntity(String name) {
         return new Task(name);
     }
 
-    @Override
-    protected Class<TaskDTO> getDtoClass() {
-        return TaskDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<TaskDTO>> getDtosGenericType() {
-        return new GenericType<List<TaskDTO>>() {};
-    }
 }

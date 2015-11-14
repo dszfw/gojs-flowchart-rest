@@ -13,6 +13,10 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        setResourceClass(ProcessResource.class);
+        setEntityClass(Process.class);
+        setDtoClass(ProcessDTO.class);
+        setDtoGenericType(new GenericType<List<ProcessDTO>>() {});
     }
 
     @After
@@ -21,29 +25,8 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
     }
 
     @Override
-    protected Class<ProcessResource> getResourceClass() {
-        return ProcessResource.class;
-    }
-
-    @Override
-    protected Class<Process> getEntityClass() {
-        return Process.class;
-    }
-
-    @Override
     protected Process createNewEntity(String name) {
         return new Process(name);
-    }
-
-    @Override
-    protected Class<ProcessDTO> getDtoClass() {
-        return ProcessDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<ProcessDTO>> getDtosGenericType() {
-        return new GenericType<List<ProcessDTO>>() {
-        };
     }
 
 }

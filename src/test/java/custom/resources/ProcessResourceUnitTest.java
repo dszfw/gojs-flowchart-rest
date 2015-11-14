@@ -16,6 +16,10 @@ public class ProcessResourceUnitTest extends BaseResourceUnitTest<ProcessResourc
     @Before
     public void setUp() {
         super.setUp();
+        setResourceClass(ProcessResource.class);
+        setEntityClass(Process.class);
+        setDtoClass(ProcessDTO.class);
+        setDtoGenericType(new GenericType<List<ProcessDTO>>() {});
         entity = new Process();
         dao = processDAO;
     }
@@ -23,26 +27,6 @@ public class ProcessResourceUnitTest extends BaseResourceUnitTest<ProcessResourc
     @After
     public void tearDown() {
         super.tearDown();
-    }
-
-    @Override
-    protected Class<ProcessResource> getResourceClass() {
-        return ProcessResource.class;
-    }
-
-    @Override
-    protected Class<Process> getEntityClass() {
-        return Process.class;
-    }
-
-    @Override
-    protected Class<ProcessDTO> getDtoClass() {
-        return ProcessDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<ProcessDTO>> getDtosGenericType() {
-        return new GenericType<List<ProcessDTO>>(){};
     }
 
     @Override

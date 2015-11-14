@@ -19,6 +19,10 @@ public class TaskConnectionResourceUnitTest extends
     @Before
     public void setUp() {
         super.setUp();
+        setResourceClass(TaskConnectionResource.class);
+        setEntityClass(TaskConnection.class);
+        setDtoClass(TaskConnectionDTO.class);
+        setDtoGenericType(new GenericType<List<TaskConnectionDTO>>() {});
         entity = new TaskConnection();
         dao = taskConnectionDAO;
     }
@@ -46,28 +50,8 @@ public class TaskConnectionResourceUnitTest extends
     }
 
     @Override
-    protected Class<TaskConnectionResource> getResourceClass() {
-        return TaskConnectionResource.class;
-    }
-
-    @Override
-    protected Class<TaskConnection> getEntityClass() {
-        return TaskConnection.class;
-    }
-
-    @Override
     protected TaskConnection createNewEntity(String name) {
         return new TaskConnection(name);
     }
 
-    @Override
-    protected Class<TaskConnectionDTO> getDtoClass() {
-        return TaskConnectionDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<TaskConnectionDTO>> getDtosGenericType() {
-        return new GenericType<List<TaskConnectionDTO>>() {
-        };
-    }
 }

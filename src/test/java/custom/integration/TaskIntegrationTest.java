@@ -14,6 +14,10 @@ public class TaskIntegrationTest extends BaseCrudIntegrationTest<TaskResource, T
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        setResourceClass(TaskResource.class);
+        setEntityClass(Task.class);
+        setDtoClass(TaskDTO.class);
+        setDtoGenericType(new GenericType<List<TaskDTO>>(){});
     }
 
     @After
@@ -22,28 +26,8 @@ public class TaskIntegrationTest extends BaseCrudIntegrationTest<TaskResource, T
     }
 
     @Override
-    protected Class<TaskResource> getResourceClass() {
-        return TaskResource.class;
-    }
-
-    @Override
-    protected Class<Task> getEntityClass() {
-        return Task.class;
-    }
-
-    @Override
     protected Task createNewEntity(String name) {
         return new Task(name);
     }
 
-    @Override
-    protected Class<TaskDTO> getDtoClass() {
-        return TaskDTO.class;
-    }
-
-    @Override
-    protected GenericType<List<TaskDTO>> getDtosGenericType() {
-        return new GenericType<List<TaskDTO>>() {
-        };
-    }
 }
