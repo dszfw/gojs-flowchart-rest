@@ -2,8 +2,10 @@ package custom.domain;
 
 import custom.dto.BaseDTO;
 import custom.dto.TaskConnectionDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -19,20 +21,25 @@ public class TaskConnection extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "fromId", nullable = false)
+    @NotNull
     private Task from;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "toId", nullable = false)
+    @NotNull
     private Task to;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "processId", nullable = false)
+    @NotNull
     private Process process;
 
     @Column(name = "fromConnector", nullable = false)
+    @NotBlank
     private String fromConnector;
 
     @Column(name = "toConnector", nullable = false)
+    @NotBlank
     private String toConnector;
 
     public TaskConnection() {

@@ -1,27 +1,23 @@
-package custom.resources;
+package custom.integration;
 
-import custom.domain.*;
+import custom.domain.Task;
 import custom.dto.task.TaskDTO;
+import custom.resources.TaskResource;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.core.GenericType;
 import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TaskResourceTest extends BaseResourceTest<TaskResource, Task, TaskDTO>{
+public class TaskIntegrationTest extends BaseCrudIntegrationTest<TaskResource, Task, TaskDTO> {
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
-        entity = new Task();
-        dao = taskDAO;
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         super.tearDown();
     }
 
@@ -47,6 +43,7 @@ public class TaskResourceTest extends BaseResourceTest<TaskResource, Task, TaskD
 
     @Override
     protected GenericType<List<TaskDTO>> getDtosGenericType() {
-        return new GenericType<List<TaskDTO>>() {};
+        return new GenericType<List<TaskDTO>>() {
+        };
     }
 }

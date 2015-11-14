@@ -30,7 +30,7 @@ public class ProcessDAO extends BaseDAO<Process> {
     public Process create(Process process) {
         if (process.getId() != 0) {
             throw new IdentifierSpecifiedForCreatingException("ID was specified " +
-                    "for new process, it will be created automatiscally");
+                    "for new process, it will be created automatically");
         }
         assocWithTask(process);
         return persist(process);
@@ -56,7 +56,8 @@ public class ProcessDAO extends BaseDAO<Process> {
             long taskId = assoc.getTask().getId();
             Optional<Task> task = taskDAO.findById(taskId);
             if (!task.isPresent()) {
-                throw new TaskNotFoundException("Task with given Id doesn't exist");
+                throw new TaskNotFoundException("Task with given Id, " +
+                        "associated with process, doesn't exist");
             }
             assoc.setTask(task.get());
             assoc.setProcess(process);

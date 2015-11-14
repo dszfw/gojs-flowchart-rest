@@ -11,7 +11,7 @@ import javax.ws.rs.core.GenericType;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProcessResourceTest extends BaseResourceTest<ProcessResource, Process, ProcessDTO> {
+public class ProcessResourceUnitTest extends BaseResourceUnitTest<ProcessResource, Process, ProcessDTO> {
 
     @Before
     public void setUp() {

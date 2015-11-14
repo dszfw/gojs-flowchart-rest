@@ -11,8 +11,8 @@ import javax.ws.rs.core.GenericType;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TaskConnectionResourceTest extends
-        BaseResourceTest<TaskConnectionResource, TaskConnection, TaskConnectionDTO> {
+public class TaskConnectionResourceUnitTest extends
+        BaseResourceUnitTest<TaskConnectionResource, TaskConnection, TaskConnectionDTO> {
 
     @Before
     public void setUp() {

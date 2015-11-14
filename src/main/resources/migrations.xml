@@ -97,19 +97,22 @@
                                  baseColumnNames="fromId"
                                  constraintName="fk_task_connections_from"
                                  referencedTableName="tasks"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseTableName="task_connections"
                                  baseColumnNames="toId"
                                  constraintName="fk_task_connections_to"
                                  referencedTableName="tasks"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseTableName="task_connections"
                                  baseColumnNames="processId"
                                  constraintName="fk_task_connections_process"
                                  referencedTableName="processes"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
 
     </changeSet>
 
