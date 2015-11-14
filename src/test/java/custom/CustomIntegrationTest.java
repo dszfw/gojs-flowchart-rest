@@ -58,7 +58,7 @@ public class CustomIntegrationTest {
         }
     }
 
-    @Test
+    /*@Test
     public void postProcess() throws Exception {
         final Process process = new Process("First process");
         final ProcessDTO processDTO = client.target("http://localhost:" + RULE.getLocalPort() + "/processes")
@@ -78,7 +78,7 @@ public class CustomIntegrationTest {
                 .readEntity(TaskDTO.class);
         assertThat(taskDTO.getId()).isNotNull();
         assertThat(taskDTO.getName()).isEqualTo(task.getName());
-    }
+    }*/
 
     @Test
     public void postProcessWithTasks() throws Exception {

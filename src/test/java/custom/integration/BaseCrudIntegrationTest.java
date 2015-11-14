@@ -4,6 +4,7 @@ import com.example.helloworld.HelloWorldApplication;
 import com.example.helloworld.HelloWorldConfiguration;
 import custom.domain.*;
 import custom.dto.BaseDTO;
+import custom.dto.ErrorDTO;
 import custom.resources.BaseResource;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
@@ -12,7 +13,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -65,6 +65,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     protected Set<Long> expectedIds;
     protected Response response;
     protected D dto;
+    protected ErrorDTO error;
     protected Client client;
     protected WebTarget target;
 
@@ -75,6 +76,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
         response = null;
         entities = null;
         dto = null;
+        error = null;
     }
 
     public void tearDown() throws Exception {
@@ -148,7 +150,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     @Test
     public void update_entityWithGivenIdExist_ok() {
         givenEntityId(1012);
-        givenEntity(getEntityClassName() + " that should be updated");
+        givenEntity(getEntityClassName() + " has been updated");
         whenUpdateRequestPerform();
         thenSuccess(OK);
         thenResponseEntityEqualGiven();
@@ -189,13 +191,16 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
         response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .delete();
+        if (response.getStatusInfo().equals(NOT_FOUND)) {
+            buildDto(NOT_FOUND.getStatusCode());
+        }
     }
 
     protected void whenUpdateRequestPerform() {
         response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .put(json(entity));
-        buildDto();
+        buildDto(response.getStatus());
     }
 
     protected void thenResponseEntitiesNotEmptyAndEqualGiven() {
@@ -242,24 +247,26 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
         response = target.path(uriForIdentifiable(id, resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .get();
-        buildDto();
+        buildDto(response.getStatus());
     }
 
     protected void thenError(Response.Status status) {
         assertThat(response.getStatusInfo()).isEqualTo(status);
+        assertThat(error).isNotNull();
     }
 
     protected void whenCreateRequestPerform() {
         response = target.path(uriForCollection(resourceClass).toString())
                 .request(APPLICATION_JSON_TYPE)
                 .post(json(entity));
-        buildDto();
+        buildDto(response.getStatus());
     }
 
-    protected void buildDto() {
-        try {
+    protected void buildDto(int statusCode) {
+        if (statusCode >= 200 && statusCode < 300) {
             dto = response.readEntity(dtoClass);
-        } catch (ProcessingException e) {
+        } else {
+            error = response.readEntity(ErrorDTO.class);
         }
     }
 

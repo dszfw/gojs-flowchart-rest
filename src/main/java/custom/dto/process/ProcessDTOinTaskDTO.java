@@ -3,30 +3,31 @@ package custom.dto.process;
 import custom.domain.Process;
 
 public class ProcessDTOinTaskDTO {
-    private long id;
-    private long position;
+
+    private Long id;
+    private Long position;
 
     public ProcessDTOinTaskDTO() {
     }
 
-    public ProcessDTOinTaskDTO(Process process, long position) {
+    public ProcessDTOinTaskDTO(Process process, Long position) {
         this.id = process.getId();
         this.position = position;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getPosition() {
+    public Long getPosition() {
         return position;
     }
 
-    public void setPosition(long position) {
+    public void setPosition(Long position) {
         this.position = position;
     }
 }

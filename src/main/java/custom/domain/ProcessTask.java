@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "process_task")
 @IdClass(ProcessTaskId.class)
 public class ProcessTask {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "processId", referencedColumnName = "id")
@@ -18,6 +19,15 @@ public class ProcessTask {
 
     @Column(name = "position")
     private long position;
+
+    public ProcessTask() {
+    }
+
+    public ProcessTask(Process process, Task task, long position) {
+        this.process = process;
+        this.task = task;
+        this.position = position;
+    }
 
     public Process getProcess() {
         return process;
