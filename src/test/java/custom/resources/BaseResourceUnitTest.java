@@ -182,20 +182,20 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
         thenError(NOT_FOUND);
     }
 
-    private void whenDeleteRequestPerform() {
+    protected void whenDeleteRequestPerform() {
         response = client.target(uriForIdentifiable(id, getResourceClass()))
                 .request(APPLICATION_JSON_TYPE)
                 .delete();
     }
 
-    private void whenUpdateRequestPerform() {
+    protected void whenUpdateRequestPerform() {
         response = client.target(uriForIdentifiable(id, getResourceClass()))
                 .request(APPLICATION_JSON_TYPE)
                 .put(json(entity));
         buildDto();
     }
 
-    private void thenResponseEntitiesEqualGiven() {
+    protected void thenResponseEntitiesEqualGiven() {
         List<? extends BaseDTO> dtos = response.readEntity(getDtosGenericType());
         for (int i = 0; i < entities.size(); i++) {
             assertThat(dtos.get(i).getId())
@@ -205,13 +205,13 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
         }
     }
 
-    private void whenGetAllRequestPerform() {
+    protected void whenGetAllRequestPerform() {
         response = client.target(uriForCollection(getResourceClass()))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
     }
 
-    private void givenEntities(String prefix) {
+    protected void givenEntities(String prefix) {
         entities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             givenEntityWithId(prefix + i);
@@ -219,32 +219,32 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
         }
     }
 
-    private void thenSuccess(Response.Status status) {
+    protected void thenSuccess(Response.Status status) {
         assertThat(response.getStatusInfo()).isEqualTo(status);
     }
 
-    private void thenResponseEntityEqualGiven() {
+    protected void thenResponseEntityEqualGiven() {
         assertThat(dto.getName()).isEqualTo(entity.getName());
     }
 
 
-    private void thenIdWasAdded() {
+    protected void thenIdWasAdded() {
         assertThat(dto.getId()).isNotZero();
         assertThat(dto.getId()).isNotEqualTo(entity.getId());
     }
 
-    private void whenGetRequestPerform() {
+    protected void whenGetRequestPerform() {
         response = client.target(uriForIdentifiable(id, getResourceClass()))
                 .request(APPLICATION_JSON_TYPE)
                 .get();
         buildDto();
     }
 
-    private void thenError(Response.Status status) {
+    protected void thenError(Response.Status status) {
         assertThat(response.getStatusInfo()).isEqualTo(status);
     }
 
-    private <Ex extends RuntimeException> void givenDaoActionsFailed(Class<Ex> exClass) {
+    protected <Ex extends RuntimeException> void givenDaoActionsFailed(Class<Ex> exClass) {
         when(dao.create(any(getEntityClass())))
                 .thenThrow(exClass);
         when(dao.update(any(getEntityClass())))
@@ -255,7 +255,7 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
 
-    private void givenDaoActionsSuccessfully() {
+    protected void givenDaoActionsSuccessfully() {
         when(dao.create(any(getEntityClass())))
                 .thenReturn(withNewId(entity));
         when(dao.update(any(getEntityClass())))
@@ -266,21 +266,21 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
                 .thenReturn(entities);
     }
 
-    private E withGivenId(E entity) {
+    protected E withGivenId(E entity) {
         return withId(entity, id);
     }
 
-    private E withNewId(E entity) {
+    protected E withNewId(E entity) {
         return withId(entity, System.nanoTime());
     }
 
-    private E withId(E entity, long id) {
+    protected E withId(E entity, long id) {
         E clone = SerializationUtils.clone(entity);
         clone.setId(id);
         return clone;
     }
 
-    private void whenCreateRequestPerform() {
+    protected void whenCreateRequestPerform() {
         response = client.target(uriForCollection(getResourceClass()))
                 .request(APPLICATION_JSON_TYPE)
                 .post(json(entity));
@@ -288,26 +288,26 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
     }
 
 
-    private void buildDto() {
+    protected void buildDto() {
         try {
             dto = response.readEntity(getDtoClass());
         } catch (ProcessingException e) {}
     }
 
-    private void givenEntity(String name) {
+    protected void givenEntity(String name) {
         entity = createNewEntity(name);
     }
 
-    private void givenEntityWithId(String name) {
+    protected void givenEntityWithId(String name) {
         givenEntity(name);
         entity.setId(System.nanoTime());
     }
 
-    private void givenEntityId() {
+    protected void givenEntityId() {
         id = System.nanoTime();
     }
 
-    private String getEntityClassName() {
+    protected String getEntityClassName() {
         return getEntityClass().getSimpleName();
     }
 }

@@ -11,7 +11,6 @@ import custom.exception.dao.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
@@ -32,7 +31,7 @@ abstract public class BaseResource {
             BaseEntity createdEntity = work.entity();
             URI uri = uriForIdentifiable(createdEntity, getClass());
             return created(createdEntity, uri);
-        } catch (IdentifierSpecifiedForCreatingException | ConstraintViolationException e) {
+        } catch (IdentifierSpecifiedForCreatingException e) {
             return error(BAD_REQUEST, e);
         } catch (NotFoundException e) {
             return error(NOT_FOUND, e);

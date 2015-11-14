@@ -1,5 +1,7 @@
 package custom.resources;
 
+import custom.domain.Process;
+import custom.domain.Task;
 import custom.domain.TaskConnection;
 import custom.dto.TaskConnectionDTO;
 import org.junit.After;
@@ -24,6 +26,23 @@ public class TaskConnectionResourceUnitTest extends
     @After
     public void tearDown() {
         super.tearDown();
+    }
+
+    @Override
+    protected void givenEntity(String name) {
+        super.givenEntity(name);
+        Process process = new Process();
+        process.setId(1000);
+        Task to = new Task();
+        to.setId(1002);
+        Task from = new Task();
+        from.setId(1003);
+
+        entity.setProcess(process);
+        entity.setFrom(from);
+        entity.setTo(to);
+        entity.setFromConnector("A");
+        entity.setToConnector("B");
     }
 
     @Override

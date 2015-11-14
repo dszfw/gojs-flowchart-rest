@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +25,7 @@ public class TaskConnectionResource extends BaseResource{
 
     @POST
     @UnitOfWork
-    public Response create(TaskConnection connection) {
+    public Response create(@Valid TaskConnection connection) {
         return create(new Work() {
             @Override
             public BaseEntity entity() {

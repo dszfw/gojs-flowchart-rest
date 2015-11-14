@@ -1,20 +1,26 @@
 package custom.dto;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ErrorDTO {
-    private String message;
+
+    private List<String> errors;
 
     public ErrorDTO() {
+        errors = new ArrayList<>();
     }
 
-    public ErrorDTO(String message) {
-        this.message = message;
+    public ErrorDTO(String... msgs) {
+        errors = new ArrayList<>(Arrays.asList(msgs));
     }
 
-    public String getMessage() {
-        return message;
+    public List<String> getErrors() {
+        return errors;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 }
