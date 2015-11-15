@@ -2,6 +2,7 @@ package custom.dto.task;
 
 import custom.domain.ProcessTask;
 import custom.domain.Task;
+import custom.domain.TaskConnection;
 import custom.dto.BaseDTO;
 import custom.dto.process.ProcessDTOinTaskDTO;
 
@@ -14,6 +15,8 @@ public class TaskDTO implements BaseDTO {
     private String category;
     private String loc;
     private Set<ProcessDTOinTaskDTO> processes = new HashSet<>();
+    private Set<Long> fromConnections;
+    private Set<Long> toConnections;
 
     public TaskDTO() {
     }
@@ -26,6 +29,19 @@ public class TaskDTO implements BaseDTO {
         for (ProcessTask assoc : task.getProcessAssoc()) {
             this.processes.add(new ProcessDTOinTaskDTO(assoc.getProcess(), assoc.getPosition()));
         }
+        fromConnections = fillConnections(task.getFromConnections());
+        toConnections = fillConnections(task.getToConnections());
+    }
+
+    private Set<Long> fillConnections(Set<TaskConnection> connections) {
+        if (connections == null || connections.isEmpty()) {
+            return null;
+        }
+        Set<Long> connectionsDto = new HashSet<>();
+        for (TaskConnection connection : connections) {
+            connectionsDto.add(connection.getId());
+        }
+        return connectionsDto;
     }
 
     public long getId() {
@@ -66,5 +82,21 @@ public class TaskDTO implements BaseDTO {
 
     public void setProcesses(Set<ProcessDTOinTaskDTO> processes) {
         this.processes = processes;
+    }
+
+    public Set<Long> getFromConnections() {
+        return fromConnections;
+    }
+
+    public void setFromConnections(Set<Long> fromConnections) {
+        this.fromConnections = fromConnections;
+    }
+
+    public Set<Long> getToConnections() {
+        return toConnections;
+    }
+
+    public void setToConnections(Set<Long> toConnections) {
+        this.toConnections = toConnections;
     }
 }

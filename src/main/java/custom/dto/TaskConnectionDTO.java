@@ -7,8 +7,8 @@ import custom.domain.*;
 public class TaskConnectionDTO implements BaseDTO {
     private Long id;
     private String name;
-    private Long from;
-    private Long to;
+    private Long fromTask;
+    private Long toTask;
     private Long process;
     private String fromConnector;
     private String toConnector;
@@ -21,8 +21,8 @@ public class TaskConnectionDTO implements BaseDTO {
         this.name = connection.getName();
         Optional<Task> fromNullable = Optional.fromNullable(connection.getFrom());
         Optional<Task> toNullable = Optional.fromNullable(connection.getTo());
-        this.from = fromNullable.isPresent() ? fromNullable.get().getId() : null;
-        this.to = toNullable.isPresent() ? toNullable.get().getId() : null;
+        this.fromTask = fromNullable.isPresent() ? fromNullable.get().getId() : null;
+        this.toTask = toNullable.isPresent() ? toNullable.get().getId() : null;
         Optional<Process> processNullable1 = Optional.fromNullable(connection.getProcess());
         this.process = processNullable1.isPresent() ? processNullable1.get().getId() : null;
         this.fromConnector = connection.getFromConnector();
@@ -45,20 +45,20 @@ public class TaskConnectionDTO implements BaseDTO {
         this.name = name;
     }
 
-    public Long getFrom() {
-        return from;
+    public Long getFromTask() {
+        return fromTask;
     }
 
-    public void setFrom(Long from) {
-        this.from = from;
+    public void setFromTask(Long fromTask) {
+        this.fromTask = fromTask;
     }
 
-    public Long getTo() {
-        return to;
+    public Long getToTask() {
+        return toTask;
     }
 
-    public void setTo(Long to) {
-        this.to = to;
+    public void setToTask(Long toTask) {
+        this.toTask = toTask;
     }
 
     public Long getProcess() {

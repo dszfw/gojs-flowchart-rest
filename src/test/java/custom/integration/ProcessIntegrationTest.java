@@ -53,6 +53,8 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
         thenSuccess(CREATED);
         thenResponseEntityEqualGiven();
         thenIdWasAdded();
+        givenEntityId(dto.getId());
+        whenGetRequestPerform();
         thenTasksWereAttached();
     }
 
