@@ -3,16 +3,12 @@ package custom.dao;
 import com.google.common.base.Optional;
 import custom.domain.*;
 import custom.domain.Process;
-import custom.exception.DropwizardExampleException;
 import custom.exception.dao.*;
 import org.hibernate.SessionFactory;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.Collections.disjoint;
 
 public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
 
@@ -64,8 +60,8 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
     private void checkThatDependenciesExist(TaskConnection connection) {
         // TODO check NPE
         checkThatProcessExist(connection.getProcess().getId());
-        checkThatTaskExist(connection.getTo().getId());
-        checkThatTaskExist(connection.getFrom().getId());
+        checkThatTaskExist(connection.getToTask().getId());
+        checkThatTaskExist(connection.getFromTask().getId());
     }
 
     private void checkThatProcessExist(Long processId) {
@@ -78,8 +74,8 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
 
     private void checkThatTasksAssociatedWithProcess(TaskConnection connection) {
         Process process = processDAO.findById(connection.getProcess().getId()).get();
-        Task from = taskDAO.findById(connection.getFrom().getId()).get();
-        Task to = taskDAO.findById(connection.getTo().getId()).get();
+        Task from = taskDAO.findById(connection.getFromTask().getId()).get();
+        Task to = taskDAO.findById(connection.getToTask().getId()).get();
 
         Set<Long> processTasksIdSet = new HashSet<>();
         for (ProcessTask processTask : process.getTaskAssoc()) {

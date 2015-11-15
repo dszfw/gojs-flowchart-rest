@@ -22,12 +22,12 @@ public class TaskConnection extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "fromId", nullable = false)
     @NotNull
-    private Task from;
+    private Task fromTask;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "toId", nullable = false)
     @NotNull
-    private Task to;
+    private Task toTask;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "processId", nullable = false)
@@ -49,20 +49,20 @@ public class TaskConnection extends BaseEntity {
         super(name);
     }
 
-    public Task getFrom() {
-        return from;
+    public Task getFromTask() {
+        return fromTask;
     }
 
-    public void setFrom(Task from) {
-        this.from = from;
+    public void setFromTask(Task fromTask) {
+        this.fromTask = fromTask;
     }
 
-    public Task getTo() {
-        return to;
+    public Task getToTask() {
+        return toTask;
     }
 
-    public void setTo(Task to) {
-        this.to = to;
+    public void setToTask(Task toTask) {
+        this.toTask = toTask;
     }
 
     public String getFromConnector() {
@@ -94,5 +94,4 @@ public class TaskConnection extends BaseEntity {
         return new TaskConnectionDTO(this);
     }
 
-    // TODO equals and hashcode
 }

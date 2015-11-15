@@ -19,8 +19,8 @@ public class TaskConnectionDTO implements BaseDTO {
     public TaskConnectionDTO(TaskConnection connection) {
         this.id = connection.getId();
         this.name = connection.getName();
-        Optional<Task> fromNullable = Optional.fromNullable(connection.getFrom());
-        Optional<Task> toNullable = Optional.fromNullable(connection.getTo());
+        Optional<Task> fromNullable = Optional.fromNullable(connection.getFromTask());
+        Optional<Task> toNullable = Optional.fromNullable(connection.getToTask());
         this.fromTask = fromNullable.isPresent() ? fromNullable.get().getId() : null;
         this.toTask = toNullable.isPresent() ? toNullable.get().getId() : null;
         Optional<Process> processNullable1 = Optional.fromNullable(connection.getProcess());

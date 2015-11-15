@@ -1,8 +1,8 @@
 # Introduction
 
-Enhanced the drop wizard demo application with many to many database persistence (Process - Task).
-Original code placed in `com.example.helloworld` package.
-The custom implemented code placed in `custom` package.
+Enhanced drop wizard demo application with many to many database persistence (Process - Task).
+Original dropwizard-examle code exist and placed in `com.example.helloworld` package.
+Custom implemented code placed in `custom` package.
 Unit and integration tests has been implemented also.
 
 # Running The Application
@@ -25,7 +25,7 @@ To test the example application run the following commands.
 
 All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
 
-* Create Process with two tasks association (101 and 103)
+* Create Process with two tasks associations (101 and 103)
 
         POST http://localhost:8080/processes
         {
@@ -36,7 +36,7 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
           ]
         }
         
-    201 CREATED will return, and response entity like:
+    201 CREATED will return, and response entity looks like:
         
         {
             "id": 1013,
@@ -54,7 +54,7 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
             "connections": []
         }
         
-    if taskAssoc is not need we can omit this, process will be created without attached tasks
+    if taskAssoc is not need, we can omit this, process will be created without attached tasks
     
 * Update process
 
@@ -63,7 +63,7 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
           "name": "process updated"
         }
 
-    response 200 OK, name changed tasks detached:
+    response 200 OK, name changed and tasks detached:
     
         {
             "id": 1013,
@@ -78,22 +78,22 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
         
     204 NO CONTENT will be response
 
-* Create Task that exist in two processes (1001 and 1000)
+* Create Task that will included in two processes (1001 and 1000)
 
         POST http://localhost:8080/tasks
         {
-          "name": "process with task assoc",
+          "name": "Task in processes",
           "processAssoc": [
             {"position": "135", "process": {"id": "1000"}},
             {"position": "136", "process": {"id": "1001"}}
           ]
         }
         
-    201 CREATED response:
+    response 201 CREATED:
     
         {
             "id": 1014,
-            "name": "process with task assoc",
+            "name": "Task in processes",
             "category": null,
             "loc": null,
             "processes": [
@@ -110,18 +110,19 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
             "toConnections": null
         }
     
+    
 * Create TaskConnection from Task(id 101) to Task(id 103) in Process(id 100)
 
         POST http://localhost:8080/connections
         {
           "fromConnector": "A",
           "toConnector": "B",
-          "from": {"id": "101"},
-          "to": {"id": "103"},
+          "fromTask": {"id": "101"},
+          "toTask": {"id": "103"},
           "process": {"id": "100"}
         }
         
-    201 CREATED response
+    response 201 CREATED
     
         {
             "id": 1018,
@@ -133,7 +134,7 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
             "toConnector": "B"
         }
         
-    then get this 100 process
+    then get this process (id 100)
     
         GET http://localhost:8080/processes/100
         {
@@ -159,10 +160,10 @@ All CRUD operations are implemented for `Process`, `Task` and `TaskConnection`
                     "fromConnector": "A",
                     "toConnector": "B"
                 }
-            ]below
+            ]
         }
     
     connection 1018 was added
-    If you try create connection with broken Process - Task association, wou will get bad response error.
+    If you try create connection with invalid "Process-Task" association, you will get bad response error.
     
 * Others operations are similar described above

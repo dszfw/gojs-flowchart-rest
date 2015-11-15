@@ -43,8 +43,8 @@ public class TaskConnectionResourceUnitTest extends
         from.setId(1003);
 
         entity.setProcess(process);
-        entity.setFrom(from);
-        entity.setTo(to);
+        entity.setFromTask(from);
+        entity.setToTask(to);
         entity.setFromConnector("A");
         entity.setToConnector("B");
     }

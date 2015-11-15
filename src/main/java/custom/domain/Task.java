@@ -38,11 +38,11 @@ public class Task extends BaseEntity {
     @OneToMany(mappedBy = "task", cascade = ALL)
     private List<ProcessTask> processAssoc = new ArrayList<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "from", cascade = REMOVE)
+    @OneToMany(fetch = LAZY, mappedBy = "fromTask", cascade = REMOVE)
     @Column(name = "fromConnections")
     private Set<TaskConnection> fromConnections = new HashSet<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "to", cascade = REMOVE)
+    @OneToMany(fetch = LAZY, mappedBy = "toTask", cascade = REMOVE)
     @Column(name = "toConnections")
     private Set<TaskConnection> toConnections = new HashSet<>();
 
