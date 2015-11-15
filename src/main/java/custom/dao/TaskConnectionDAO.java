@@ -3,13 +3,16 @@ package custom.dao;
 import com.google.common.base.Optional;
 import custom.domain.*;
 import custom.domain.Process;
-import custom.exception.dao.IdentifierSpecifiedForCreatingException;
-import custom.exception.dao.ProcessNotFoundException;
-import custom.exception.dao.TaskConnectionNotFound;
-import custom.exception.dao.TaskNotFoundException;
+import custom.exception.DropwizardExampleException;
+import custom.exception.dao.*;
 import org.hibernate.SessionFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static java.util.Collections.disjoint;
 
 public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
 
@@ -34,6 +37,7 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
                     "for new taskConnection, it will be created automatically");
         }
         checkThatDependenciesExist(connection);
+        checkThatTasksAssociatedWithProcess(connection);
         return persist(connection);
     }
 
@@ -42,6 +46,7 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
             throw new TaskConnectionNotFound();
         }
         checkThatDependenciesExist(connection);
+        checkThatTasksAssociatedWithProcess(connection);
         return persist(connection);
     }
 
@@ -68,6 +73,22 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
         if (!process.isPresent()) {
             throw new ProcessNotFoundException("Process with given Id, " +
                     "associated with TaskConnection, doesn't exist");
+        }
+    }
+
+    private void checkThatTasksAssociatedWithProcess(TaskConnection connection) {
+        Process process = processDAO.findById(connection.getProcess().getId()).get();
+        Task from = taskDAO.findById(connection.getFrom().getId()).get();
+        Task to = taskDAO.findById(connection.getTo().getId()).get();
+
+        Set<Long> processTasksIdSet = new HashSet<>();
+        for (ProcessTask processTask : process.getTaskAssoc()) {
+            processTasksIdSet.add(processTask.getTask().getId());
+        }
+
+        if (!processTasksIdSet.contains(from.getId())
+                || !processTasksIdSet.contains(to.getId())) {
+            throw new TaskNotAssociatedWithProcess();
         }
     }
 

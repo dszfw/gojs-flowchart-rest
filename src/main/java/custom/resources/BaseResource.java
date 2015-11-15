@@ -31,7 +31,7 @@ abstract public class BaseResource {
             BaseEntity createdEntity = work.entity();
             URI uri = uriForIdentifiable(createdEntity, getClass());
             return created(createdEntity, uri);
-        } catch (IdentifierSpecifiedForCreatingException e) {
+        } catch (IdentifierSpecifiedForCreatingException | TaskNotAssociatedWithProcess e) {
             return error(BAD_REQUEST, e);
         } catch (NotFoundException e) {
             return error(NOT_FOUND, e);

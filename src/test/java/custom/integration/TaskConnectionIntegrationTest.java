@@ -18,7 +18,8 @@ public class TaskConnectionIntegrationTest extends BaseCrudIntegrationTest<TaskC
         setResourceClass(TaskConnectionResource.class);
         setEntityClass(TaskConnection.class);
         setDtoClass(TaskConnectionDTO.class);
-        setDtoGenericType(new GenericType<List<TaskConnectionDTO>>() {});
+        setDtoGenericType(new GenericType<List<TaskConnectionDTO>>() {
+        });
     }
 
     @After
@@ -48,4 +49,39 @@ public class TaskConnectionIntegrationTest extends BaseCrudIntegrationTest<TaskC
         return new TaskConnection(name);
     }
 
+    /*    @Test
+    public void createTaskWithConnections_connectionsExist_created() {
+        givenEntity("New task with connection attached");
+        givenConnections();
+        whenCreateRequestPerform();
+        thenSuccess(CREATED);
+        thenResponseEntityEqualGiven();
+        thenIdWasAdded();
+        givenEntityId(dto.getId());
+        whenGetRequestPerform();
+        thenConnectionsWereAttached();
+        thenConnectionsEqualGiven();
+    }
+
+    private void thenConnectionsEqualGiven() {
+//        assertThat(dto.get)
+    }
+
+    private void thenConnectionsWereAttached() {
+        assertThat(dto.getFromConnections()).isNotEmpty();
+        assertThat(dto.getToConnections()).isNotEmpty();
+
+    }
+
+    private void givenConnections() {
+        from = new TaskConnection();
+        fromConnectionId = 1010L;
+        from.setId(fromConnectionId);
+        entity.getFromConnections().add(from);
+        to = new TaskConnection();
+        toConnectionId = 1011L;
+        to.setId(toConnectionId);
+        entity.getToConnections().add(to);
+    }
+*/
 }
