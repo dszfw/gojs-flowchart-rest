@@ -5,24 +5,17 @@ defaultName: ${DW_DEFAULT_NAME:-Stranger}
 # Database settings.
 database:
 
-  # the name of your JDBC driver
-#  driverClass: org.h2.Driver
-  driverClass: com.mysql.jdbc.Driver
+# H2 configuration
+  driverClass: org.h2.Driver
+  user: sa
+  password: sa
+  url: jdbc:h2:./target/example
 
-  # the username
-#  user: sa
-  user: root
-
-  # the password
-#  password: sa
-  password: root
-
-  # the JDBC URL
-#  url: jdbc:h2:./target/example
-  url: jdbc:mysql://localhost/dropwizard?useUnicode=true&characterEncoding=utf8
-
-#  properties:
-#      hibernate.hbm2ddl.auto: create-drop
+#  MySql configuration
+#  driverClass: com.mysql.jdbc.Driver
+#  user: root
+#  password: root
+#  url: jdbc:mysql://localhost/dropwizard?useUnicode=true&characterEncoding=utf8
 
 # use the simple server factory if you only want to run on a single port
 #server:
