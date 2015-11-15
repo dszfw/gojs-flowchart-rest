@@ -31,7 +31,8 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
         setResourceClass(ProcessResource.class);
         setEntityClass(Process.class);
         setDtoClass(ProcessDTO.class);
-        setDtoGenericType(new GenericType<List<ProcessDTO>>() {});
+        setDtoGenericType(new GenericType<List<ProcessDTO>>() {
+        });
     }
 
     @After
@@ -73,11 +74,42 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
         thenProcessContainsTasks();
     }
 
-/*    @Test
+    @Test
     public void updateTasksPositionsInProcess() {
         givenEntityId(1000);
+        whenGetRequestPerform();
+        thenSuccess(OK);
+        thenProcessContainsTasks();
+        // process name will not be changed, leave the same
+        givenEntity(dto.getName());
+        givenNewPositionsForTasks();
+        whenUpdateRequestPerform();
+        thenSuccess(OK);
+        thenPositionsChanged();
+    }
 
-    }*/
+    private void thenPositionsChanged() {
+        assertThat(dto.getTasks()).isNotEmpty();
+        assertThat(dto.getTasks().size()).isEqualTo(taskIdPositionMap.size());
+        for (TaskDTOinProcessDTO taskDto : dto.getTasks()) {
+            assertThat(taskDto.getPosition()).isNotNull();
+            assertThat(taskDto.getPosition()).
+                    isNotEqualTo(taskIdPositionMap.get(taskDto.getId()));
+        }
+    }
+
+    private void givenNewPositionsForTasks() {
+        // old positions
+        taskIdPositionMap = new HashMap<>();
+        for (TaskDTOinProcessDTO taskDto : dto.getTasks()) {
+            taskIdPositionMap.put(taskDto.getId(), taskDto.getPosition());
+            Task task = new Task();
+            task.setId(taskDto.getId());
+            // new position
+            ProcessTask assoc = new ProcessTask(entity, task, taskDto.getPosition() + 1);
+            entity.getTaskAssoc().add(assoc);
+        }
+    }
 
     private void thenProcessContainsTasks() {
         assertThat(dto.getTasks()).isNotEmpty();
@@ -86,7 +118,7 @@ public class ProcessIntegrationTest extends BaseCrudIntegrationTest<ProcessResou
     private void givenNonExistTaskAttached() {
         task = new Task();
         task.setId(System.nanoTime());
-        entity.getTaskAssoc().add(new ProcessTask(entity, task, 1));
+        entity.getTaskAssoc().add(new ProcessTask(entity, task, 1L));
     }
 
     private void thenTasksWereAttached() {

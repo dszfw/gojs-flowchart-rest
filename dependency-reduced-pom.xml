@@ -232,10 +232,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.site.deploy.skip>true</maven.site.deploy.skip>
     <maven.site.skip>true</maven.site.skip>
-    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.source>1.7</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.deploy.skip>true</maven.deploy.skip>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 </project>
 

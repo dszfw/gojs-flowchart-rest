@@ -23,7 +23,7 @@ public class TaskResource extends BaseResource {
 
     @POST
     @UnitOfWork
-    public Response create(Task task) {
+    public Response create(final Task task) {
         return create(new Work() {
             @Override
             public BaseEntity entity() {
@@ -35,7 +35,7 @@ public class TaskResource extends BaseResource {
     @GET
     @Path("{id}")
     @UnitOfWork
-    public Response get(@PathParam("id") LongParam id) {
+    public Response get(@PathParam("id") final LongParam id) {
         return get(new Work() {
             @Override
             public Optional<? extends BaseEntity> entityOptional() {
@@ -58,7 +58,7 @@ public class TaskResource extends BaseResource {
     @PUT
     @Path("{id}")
     @UnitOfWork
-    public Response update(@PathParam("id") LongParam id, Task task) {
+    public Response update(@PathParam("id") final LongParam id, final Task task) {
         Work work = new Work() {
             @Override
             public BaseEntity entity() {
@@ -71,7 +71,7 @@ public class TaskResource extends BaseResource {
     @DELETE
     @Path("{id}")
     @UnitOfWork
-    public Response delete(@PathParam("id") LongParam id) {
+    public Response delete(@PathParam("id") final LongParam id) {
         return delete(new Work() {
             @Override
             public void doWork() {

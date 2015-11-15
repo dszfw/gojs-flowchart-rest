@@ -18,12 +18,12 @@ public class ProcessTask {
     private Task task;
 
     @Column(name = "position")
-    private long position;
+    private Long position;
 
     public ProcessTask() {
     }
 
-    public ProcessTask(Process process, Task task, long position) {
+    public ProcessTask(Process process, Task task, Long position) {
         this.process = process;
         this.task = task;
         this.position = position;
@@ -45,11 +45,11 @@ public class ProcessTask {
         this.task = task;
     }
 
-    public long getPosition() {
+    public Long getPosition() {
         return position;
     }
 
-    public void setPosition(long position) {
+    public void setPosition(Long position) {
         this.position = position;
     }
 }

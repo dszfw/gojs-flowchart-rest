@@ -24,7 +24,7 @@ public class ProcessResource extends BaseResource {
 
     @POST
     @UnitOfWork
-    public Response create(Process process) {
+    public Response create(final Process process) {
         return create(new Work() {
             @Override
             public BaseEntity entity() {
@@ -36,7 +36,7 @@ public class ProcessResource extends BaseResource {
     @GET
     @Path("{id}")
     @UnitOfWork
-    public Response get(@PathParam("id") LongParam id) {
+    public Response get(@PathParam("id") final LongParam id) {
         return get(new Work() {
             @Override
             public Optional<? extends BaseEntity> entityOptional() {
@@ -59,7 +59,7 @@ public class ProcessResource extends BaseResource {
     @PUT
     @Path("{id}")
     @UnitOfWork
-    public Response update(@PathParam("id") LongParam id, Process process) {
+    public Response update(@PathParam("id") final LongParam id, final Process process) {
         Work work = new Work() {
             @Override
             public BaseEntity entity() {
@@ -72,7 +72,7 @@ public class ProcessResource extends BaseResource {
     @DELETE
     @Path("{id}")
     @UnitOfWork
-    public Response delete(@PathParam("id") LongParam id) {
+    public Response delete(@PathParam("id") final LongParam id) {
         return delete(new Work() {
             @Override
             public void doWork() {

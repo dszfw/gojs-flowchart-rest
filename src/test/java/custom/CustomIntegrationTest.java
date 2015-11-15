@@ -97,7 +97,7 @@ public class CustomIntegrationTest {
     }
 
     private void createTasksForProcess(Process process, int count) {
-        for (int i = 1; i <= count; i++) {
+        for (long i = 1; i <= count; i++) {
             Task task = new Task("Task " + i);
             final TaskDTO taskDTO = client.target("http://localhost:" + RULE.getLocalPort() + "/tasks")
                     .request()

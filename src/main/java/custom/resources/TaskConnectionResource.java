@@ -25,7 +25,7 @@ public class TaskConnectionResource extends BaseResource{
 
     @POST
     @UnitOfWork
-    public Response create(@Valid TaskConnection connection) {
+    public Response create(@Valid final TaskConnection connection) {
         return create(new Work() {
             @Override
             public BaseEntity entity() {
@@ -37,7 +37,7 @@ public class TaskConnectionResource extends BaseResource{
     @GET
     @Path("{id}")
     @UnitOfWork
-    public Response get(@PathParam("id") LongParam id) {
+    public Response get(@PathParam("id") final LongParam id) {
         return get(new Work() {
             @Override
             public Optional<? extends BaseEntity> entityOptional() {
@@ -60,7 +60,7 @@ public class TaskConnectionResource extends BaseResource{
     @PUT
     @Path("{id}")
     @UnitOfWork
-    public Response update(@PathParam("id") LongParam id, TaskConnection connection) {
+    public Response update(@PathParam("id") final LongParam id, final TaskConnection connection) {
         Work work = new Work() {
             @Override
             public BaseEntity entity() {
@@ -73,7 +73,7 @@ public class TaskConnectionResource extends BaseResource{
     @DELETE
     @Path("{id}")
     @UnitOfWork
-    public Response delete(@PathParam("id") LongParam id) {
+    public Response delete(@PathParam("id") final LongParam id) {
         return delete(new Work() {
             @Override
             public void doWork() {

@@ -128,10 +128,6 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
         thenIdEqualGiven();
     }
 
-    private void thenIdEqualGiven() {
-        assertThat(dto.getId()).isEqualTo(id);
-    }
-
     @Test
     public void testGet_entityWithGivenIdDoesNotExist_notFound() {
         givenEntityId();
@@ -140,7 +136,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     @Test
-    public void list_entities_ok() {
+    public void testList_entities_ok() {
         givenEntities(getEntityClassName() + "#");
         whenGetAllRequestPerform();
         thenSuccess(OK);
@@ -148,7 +144,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     @Test
-    public void update_entityWithGivenIdExist_ok() {
+    public void testUpdate_entityWithGivenIdExist_ok() {
         givenEntityId(1012);
         givenEntity(getEntityClassName() + " has been updated");
         whenUpdateRequestPerform();
@@ -158,7 +154,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     @Test
-    public void update_idSpecifiedInRequestBody_badRequest() {
+    public void testUpdate_idSpecifiedInRequestBody_badRequest() {
         givenEntityId();
         givenEntityWithId(getEntityClassName() + " that should be updated has ID in body");
         whenUpdateRequestPerform();
@@ -166,7 +162,7 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     @Test
-    public void update_entityWithGivenIdDoesNotExist_notFound() {
+    public void testUpdate_entityWithGivenIdDoesNotExist_notFound() {
         givenEntityId();
         givenEntity(getEntityClassName() + " that would not be updated");
         whenUpdateRequestPerform();
@@ -174,14 +170,14 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     }
 
     @Test
-    public void delete_entityWithGivenIdExist_noContent() {
+    public void testDelete_entityWithGivenIdExist_noContent() {
         givenEntityId(1011);
         whenDeleteRequestPerform();
         thenSuccess(NO_CONTENT);
     }
 
     @Test
-    public void delete_entityWithGivenIdDoesNotExist_notFound() {
+    public void testDelete_entityWithGivenIdDoesNotExist_notFound() {
         givenEntityId();
         whenDeleteRequestPerform();
         thenError(NOT_FOUND);
@@ -253,6 +249,10 @@ abstract public class BaseCrudIntegrationTest<R extends BaseResource, E extends 
     protected void thenError(Response.Status status) {
         assertThat(response.getStatusInfo()).isEqualTo(status);
         assertThat(error).isNotNull();
+    }
+
+    private void thenIdEqualGiven() {
+        assertThat(dto.getId()).isEqualTo(id);
     }
 
     protected void whenCreateRequestPerform() {

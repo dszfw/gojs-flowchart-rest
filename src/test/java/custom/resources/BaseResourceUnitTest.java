@@ -263,12 +263,10 @@ abstract public class BaseResourceUnitTest<R extends BaseResource, E extends Bas
 
     @SuppressWarnings("unchecked")
     protected <Ex extends RuntimeException> void givenDaoActionsFailed(Class<Ex> exClass) {
-        when(dao.create(any(entityClass)))
-                .thenThrow(exClass);
-        when(dao.update(any(entityClass)))
-                .thenThrow(exClass);
+        doThrow(exClass).when(dao).create(any(entityClass));
+        doThrow(exClass).when(dao).update(any(entityClass));
         when(dao.findById(any(Long.class)))
-                .thenReturn(Optional.absent());
+                .thenReturn(Optional.<E>absent());
         doThrow(exClass).when(dao).delete(any(entityClass));
     }
 

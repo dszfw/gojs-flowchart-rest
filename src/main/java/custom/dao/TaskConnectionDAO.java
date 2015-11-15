@@ -1,7 +1,10 @@
 package custom.dao;
 
+import com.google.common.base.Optional;
 import custom.domain.*;
+import custom.domain.Process;
 import custom.exception.dao.IdentifierSpecifiedForCreatingException;
+import custom.exception.dao.ProcessNotFoundException;
 import custom.exception.dao.TaskConnectionNotFound;
 import custom.exception.dao.TaskNotFoundException;
 import org.hibernate.SessionFactory;
@@ -10,8 +13,19 @@ import java.util.List;
 
 public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
 
+    private ProcessDAO processDAO;
+    private TaskDAO taskDAO;
+
     public TaskConnectionDAO(SessionFactory factory) {
         super(factory);
+    }
+
+    public void setProcessDAO(ProcessDAO processDAO) {
+        this.processDAO = processDAO;
+    }
+
+    public void setTaskDAO(TaskDAO taskDAO) {
+        this.taskDAO = taskDAO;
     }
 
     public TaskConnection create(TaskConnection connection) {
@@ -19,8 +33,7 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
             throw new IdentifierSpecifiedForCreatingException("ID was specified " +
                     "for new taskConnection, it will be created automatically");
         }
-        // TODO check that tasks are exist!
-        // TODO check that process are exist!
+        checkThatDependenciesExist(connection);
         return persist(connection);
     }
 
@@ -28,8 +41,7 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
         if (!isExist(connection.getId())) {
             throw new TaskConnectionNotFound();
         }
-        // TODO check that tasks are exist!
-        // TODO check that process are exist!
+        checkThatDependenciesExist(connection);
         return persist(connection);
     }
 
@@ -42,5 +54,28 @@ public class TaskConnectionDAO extends BaseDAO<TaskConnection> {
 
     public List<TaskConnection> findAll() {
         return list(namedQuery("custom.domain.TaskConnection.findAll"));
+    }
+
+    private void checkThatDependenciesExist(TaskConnection connection) {
+        // TODO check NPE
+        checkThatProcessExist(connection.getProcess().getId());
+        checkThatTaskExist(connection.getTo().getId());
+        checkThatTaskExist(connection.getFrom().getId());
+    }
+
+    private void checkThatProcessExist(Long processId) {
+        Optional<Process> process = processDAO.findById(processId);
+        if (!process.isPresent()) {
+            throw new ProcessNotFoundException("Process with given Id, " +
+                    "associated with TaskConnection, doesn't exist");
+        }
+    }
+
+    private void checkThatTaskExist(Long taskId) {
+        Optional<Task> task = taskDAO.findById(taskId);
+        if (!task.isPresent()) {
+            throw new TaskNotFoundException("Task with given Id, " +
+                    "associated with TaskConnection, doesn't exist");
+        }
     }
 }

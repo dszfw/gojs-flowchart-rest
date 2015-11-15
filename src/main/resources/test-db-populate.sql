@@ -70,9 +70,9 @@ INSERT INTO tasks (id, name, category, loc) VALUES (1011, 'Task that will be del
 INSERT INTO tasks (id, name, category, loc) VALUES (1012, 'Task that should be updated', NULL , NULL );
 
 INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1001, 0);
-INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1002, 0);
-INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1003, 0);
-INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1004, 0);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1002, 1);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1003, 2);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1004, 3);
 
 INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (1000, 1000, 1001, 1002, 'Some TaskConnection', 'A', 'B');
 INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (1001, 1000, 1002, 1003, 'TaskConnection#0', 'A', 'B');
