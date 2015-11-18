@@ -111,7 +111,11 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         env.jersey().register(new ProcessResource(processDAO));
         env.jersey().register(new TaskResource(taskDAO));
         env.jersey().register(new TaskConnectionResource(taskConnectionDAO));
-        env.jersey().register(new GoJsResource());
+        GoJsResource goJsResource = new GoJsResource();
+        goJsResource.setProcessDAO(processDAO);
+        goJsResource.setTaskDAO(taskDAO);
+        goJsResource.setTaskConnectionDAO(taskConnectionDAO);
+        env.jersey().register(goJsResource);
         env.jersey().register(new FilteredResource());
     }
 }
