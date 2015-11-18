@@ -1,6 +1,5 @@
-package custom.resources;
+package custom.resources.gojs;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import custom.dto.gojs.GoJsProcessDTO;
 import io.dropwizard.hibernate.UnitOfWork;
 

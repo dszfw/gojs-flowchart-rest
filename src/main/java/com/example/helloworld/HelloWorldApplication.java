@@ -4,7 +4,7 @@ import com.example.helloworld.auth.ExampleAuthorizer;
 import com.example.helloworld.core.*;
 import com.example.helloworld.db.*;
 import com.example.helloworld.resources.*;
-import custom.resources.GoJsResource;
+import custom.resources.gojs.GoJsResource;
 import custom.resources.ProcessResource;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import com.example.helloworld.auth.ExampleAuthenticator;
