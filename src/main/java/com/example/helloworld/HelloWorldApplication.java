@@ -4,6 +4,7 @@ import com.example.helloworld.auth.ExampleAuthorizer;
 import com.example.helloworld.core.*;
 import com.example.helloworld.db.*;
 import com.example.helloworld.resources.*;
+import custom.resources.GoJsResource;
 import custom.resources.ProcessResource;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import com.example.helloworld.auth.ExampleAuthenticator;
@@ -110,6 +111,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         env.jersey().register(new ProcessResource(processDAO));
         env.jersey().register(new TaskResource(taskDAO));
         env.jersey().register(new TaskConnectionResource(taskConnectionDAO));
+        env.jersey().register(new GoJsResource());
         env.jersey().register(new FilteredResource());
     }
 }
