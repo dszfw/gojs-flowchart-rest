@@ -15,10 +15,9 @@ import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -46,38 +45,30 @@ public class GoJsResource {
     @GET
     @Path("{id}")
     @UnitOfWork
-    public GoJsProcessDTO getGoJsJson(@PathParam("id") final LongParam id) {
-        GoJsProcessDTO processDTO = new GoJsProcessDTO();
-        processDTO.setLinkDataArray(new HashSet<>());
-        processDTO.setNodeDataArray(new HashSet<>());
-        Optional<Process> processOptional = processDAO.findById(id.get());
-        Process process = processOptional.get();
-        for (ProcessTask pt : process.getTaskAssoc()) {
-            GoJsTaskDTO taskDTO = new GoJsTaskDTO();
-            taskDTO.setKey(pt.getPosition());
-            taskDTO.setCategory(pt.getTask().getCategory());
-            taskDTO.setLoc(pt.getTask().getLoc());
-            taskDTO.setText(pt.getTask().getName());
-            processDTO.getNodeDataArray().add(taskDTO);
+    public Response getGoJsJson(@PathParam("id") final LongParam id) {
+        Optional<Process> p = processDAO.findById(id.get());
+        Map<String, Object> dto = createGoJsProcessDTO(p.get());
+        return Response.ok(dto).build();
+    }
+
+    @GET
+    @UnitOfWork
+    public Response getGoJsJsons() {
+        Set<Map<String, Object>> dtos = new HashSet<>();
+        List<Process> processList = processDAO.findAll();
+        for (Process process : processList) {
+            dtos.add(createGoJsProcessDTO(process));
         }
-        for (TaskConnection tc : process.getConnections()) {
-            GoJsTaskConnectionDTO connectionDTO = new GoJsTaskConnectionDTO();
-            connectionDTO.setFrom(tc.getFromTask().getId());
-            connectionDTO.setTo(tc.getToTask().getId());
-            connectionDTO.setFromPort(tc.getFromConnector());
-            connectionDTO.setToPort(tc.getToConnector());
-            processDTO.getLinkDataArray().add(connectionDTO);
-        }
-        return processDTO;
+        return Response.ok(dtos).build();
     }
 
     @POST
     @UnitOfWork
-    public void  postGoJsJson(final GoJsProcessDTO dto) {
+    public Response postGoJsJson(final GoJsProcessDTO dto) {
         Process process = processDAO.create(new Process());
-        Map<Long, Long> taskKeyId = new HashMap<>();
+        Map<Long, Long> keyIdMap = new HashMap<>();
 
-        for (GoJsTaskDTO jsTaskDTO: dto.getNodeDataArray()) {
+        for (GoJsTaskDTO jsTaskDTO : dto.getNodeDataArray()) {
             Task t = new Task();
             ProcessTask processTask = new ProcessTask(process, t, jsTaskDTO.getKey());
             process.getTaskAssoc().add(processTask);
@@ -86,12 +77,12 @@ public class GoJsResource {
             t.setLoc(jsTaskDTO.getLoc());
             t.setName(jsTaskDTO.getText());
             Task task = taskDAO.create(t);
-            taskKeyId.put(jsTaskDTO.getKey(), task.getId());
+            keyIdMap.put(jsTaskDTO.getKey(), task.getId());
         }
 
         for (GoJsTaskConnectionDTO jsTaskConnectionDTO : dto.getLinkDataArray()) {
-            Optional<Task> from = taskDAO.findById(taskKeyId.get(jsTaskConnectionDTO.getFrom()));
-            Optional<Task> to = taskDAO.findById(taskKeyId.get(jsTaskConnectionDTO.getTo()));
+            Optional<Task> from = taskDAO.findById(keyIdMap.get(jsTaskConnectionDTO.getFrom()));
+            Optional<Task> to = taskDAO.findById(keyIdMap.get(jsTaskConnectionDTO.getTo()));
             TaskConnection tc = new TaskConnection();
             tc.setProcess(process);
             tc.setFromTask(from.get());
@@ -100,6 +91,37 @@ public class GoJsResource {
             tc.setToConnector(jsTaskConnectionDTO.getToPort());
             taskConnectionDAO.create(tc);
         }
+        return Response.ok(createGoJsProcessDTO(process)).build();
+    }
 
+    private Map<String, Object> createGoJsProcessDTO(Process process) {
+        HashMap<String, Object> processDTO = new HashMap<>();
+        HashSet<GoJsTaskDTO> nodeDataArray = new HashSet<>();
+        HashSet<GoJsTaskConnectionDTO> linkDataArray = new HashSet<>();
+        processDTO.put("nodeDataArray", nodeDataArray);
+        processDTO.put("linkDataArray", linkDataArray);
+        processDTO.put("class", "go.GraphLinksModel");
+        processDTO.put("linkFromPortIdProperty", "fromPort");
+        processDTO.put("linkToPortIdProperty", "toPort");
+
+        Map<Long, Long> idKeyMap = new HashMap<>();
+        for (ProcessTask pt : process.getTaskAssoc()) {
+            idKeyMap.put(pt.getTask().getId(), pt.getPosition());
+            GoJsTaskDTO taskDTO = new GoJsTaskDTO();
+            taskDTO.setKey(pt.getPosition());
+            taskDTO.setCategory(pt.getTask().getCategory());
+            taskDTO.setLoc(pt.getTask().getLoc());
+            taskDTO.setText(pt.getTask().getName());
+            nodeDataArray.add(taskDTO);
+        }
+        for (TaskConnection tc : process.getConnections()) {
+            GoJsTaskConnectionDTO connectionDTO = new GoJsTaskConnectionDTO();
+            connectionDTO.setFrom(idKeyMap.get(tc.getFromTask().getId()));
+            connectionDTO.setTo(idKeyMap.get(tc.getToTask().getId()));
+            connectionDTO.setFromPort(tc.getFromConnector());
+            connectionDTO.setToPort(tc.getToConnector());
+            linkDataArray.add(connectionDTO);
+        }
+        return processDTO;
     }
 }
