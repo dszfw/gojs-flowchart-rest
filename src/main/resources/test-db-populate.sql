@@ -74,6 +74,16 @@ INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1002, 1);
 INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1003, 2);
 INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1004, 3);
 
+
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1005, 4);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1006, 5);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1007, 6);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1008, 7);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1009, 8);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1010, 9);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1011, 10);
+INSERT INTO process_task (processId, taskId, position) VALUES (1000, 1012, 11);
+
 INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (1000, 1000, 1001, 1002, 'Some TaskConnection', 'A', 'B');
 INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (1001, 1000, 1002, 1003, 'TaskConnection#0', 'A', 'B');
 INSERT INTO task_connections (id, processId, fromId, toId, name, fromConnector, toConnector) VALUES (1002, 1000, 1004, 1002, 'TaskConnection#1', 'A', 'B');
